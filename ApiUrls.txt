@@ -1,0 +1,8 @@
+IdentityService.API -> https://localhost:44302
+ProductService.API -> https://localhost:44303
+BasketService.API -> https://localhost:44304
+OrderService.API -> https://localhost:44305
+PaymentService.API -> https://localhost:44306
+
+
+OcelotApiGateway -> https://localhost:44310
