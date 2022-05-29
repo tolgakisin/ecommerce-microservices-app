@@ -1,16 +1,19 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using MassTransit;
+using ProductService.Query.Consumers;
+using ProductService.Command.Data.Common;
+using Microsoft.EntityFrameworkCore;
+using ProductService.Query.Data.Common;
 
 namespace ProductService.API
 {
@@ -26,6 +29,35 @@ namespace ProductService.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMediatR(typeof(ProductDbContext).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(ProductReadDbContext).GetTypeInfo().Assembly);
+
+            services.AddMassTransit((x) =>
+            {
+                x.AddConsumer<ProductCreatedEventConsumer>(typeof(ProductCreatedEventConsumerDefinition));
+                x.AddConsumer<ProductDeletedEventConsumer>(typeof(ProductDeletedEventConsumerDefinition));
+
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host("localhost", "/", c =>
+                    {
+                        c.Username("guest");
+                        c.Password("guest");
+                    });
+
+                    cfg.ConfigureEndpoints(context);
+                });
+            });
+
+            services.AddDbContext<ProductDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetSection("ConnectionString:ProductServiceWriteDb").Value);
+            });
+
+            services.AddDbContext<ProductReadDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetSection("ConnectionString:ProductServiceReadDb").Value);
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
