@@ -15,7 +15,6 @@ namespace ProductService.Query.Consumers
         public ProductCreatedEventConsumerDefinition()
         {
             EndpointName = "product-service-product-created";
-            ConcurrentMessageLimit = 1;
         }
 
         protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator, IConsumerConfigurator<ProductCreatedEventConsumer> consumerConfigurator)
