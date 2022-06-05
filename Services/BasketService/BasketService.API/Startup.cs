@@ -1,3 +1,8 @@
+using BasketService.API.Extensions;
+using BasketService.Business.Services;
+using BasketService.Business.Contracts.Services;
+using BasketService.Data.Contracts.Repositories.Basket;
+using BasketService.Data.Repositories.Basket;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace BasketService.API
 {
@@ -26,8 +32,16 @@ namespace BasketService.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            ConfigureExtensions(services);
 
-            services.AddControllers();
+            //var mapperConfig = new MapperConfiguration(configuration =>
+            //{
+            //    configuration.AddMaps(typeof(Startup));
+            //});
+            //IMapper mapper = mapperConfig.CreateMapper();
+            //services.AddSingleton(mapper);
+
+            services.AddControllers().AddNewtonsoftJson();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BasketService.API", Version = "v1" });
@@ -48,12 +62,23 @@ namespace BasketService.API
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void ConfigureExtensions(IServiceCollection services)
+        {
+            services.ConfigureAuth(Configuration);
+
+            services.AddSingleton(x => x.ConfigureRedis(Configuration));
+
+            services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddScoped<IBasketService, BasketService.Business.Services.BasketService>();
         }
     }
 }

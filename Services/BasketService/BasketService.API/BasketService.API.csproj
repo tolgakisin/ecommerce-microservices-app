@@ -5,7 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.17" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.17" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BasketService.API.Contracts\BasketService.API.Contracts.csproj" />
+    <ProjectReference Include="..\BasketService.Business.Contracts\BasketService.Business.Contracts.csproj" />
+    <ProjectReference Include="..\BasketService.Business\BasketService.Business.csproj" />
+    <ProjectReference Include="..\BasketService.Common\BasketService.Common.csproj" />
+    <ProjectReference Include="..\BasketService.Data\BasketService.Data.csproj" />
   </ItemGroup>
 
 </Project>

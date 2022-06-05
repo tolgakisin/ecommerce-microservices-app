@@ -7,13 +7,6 @@ services:
       - 5672:5672
       - 15672:15672
 
-  #s_rabbitmq: 
-  #  container_name: "c_rabbitmq"
-  #  image: rabbitmq:3-management
-  #  ports: 
-  #    - 5672:5672
-  #    - 15672:15672
-
   s_redis: 
     container_name: "c_redis"
     image: redis
