@@ -52,5 +52,22 @@ namespace BasketService.Business.Services
 
             return isCleared;
         }
+
+        public async Task<CustomerBasket> CheckoutBasketAsync(string buyerId)
+        {
+            if (string.IsNullOrEmpty(buyerId))
+                ErrorManagement.ThrowError("Buyer is not found.");
+
+            CustomerBasket customerBasket = await _basketRepository.GetBasketAsync(buyerId);
+
+            if (customerBasket == null || !customerBasket.BasketItems.Any())
+                ErrorManagement.ThrowError("Basket couldn't be sent.");
+
+            // Check Stock
+
+            // Send BasketCheckoutEvent
+
+            return customerBasket;
+        }
     }
 }

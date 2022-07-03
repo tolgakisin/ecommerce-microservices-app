@@ -16,6 +16,7 @@
     <ProjectReference Include="..\BasketService.Business\BasketService.Business.csproj" />
     <ProjectReference Include="..\BasketService.Common\BasketService.Common.csproj" />
     <ProjectReference Include="..\BasketService.Data\BasketService.Data.csproj" />
+    <ProjectReference Include="..\BasketService.EventBus\BasketService.EventBus\BasketService.EventBus.csproj" />
   </ItemGroup>
 
 </Project>

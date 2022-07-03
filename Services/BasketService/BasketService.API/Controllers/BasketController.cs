@@ -60,7 +60,7 @@ namespace BasketService.API.Controllers
         {
             return await base.ExecuteAsync<CustomerBasketResponse>(async (response) =>
             {
-                //TODO Add EventBus Architecture and continue the process.
+                _ = await _basketService.CheckoutBasketAsync(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
 
                 return response;
             });

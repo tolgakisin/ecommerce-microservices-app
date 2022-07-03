@@ -1,22 +1,15 @@
 using BasketService.API.Extensions;
-using BasketService.Business.Services;
 using BasketService.Business.Contracts.Services;
 using BasketService.Data.Contracts.Repositories.Basket;
 using BasketService.Data.Repositories.Basket;
+using BasketService.EventBus.Models;
+using BasketService.EventBus.RabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
 
 namespace BasketService.API
 {
@@ -33,13 +26,6 @@ namespace BasketService.API
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureExtensions(services);
-
-            //var mapperConfig = new MapperConfiguration(configuration =>
-            //{
-            //    configuration.AddMaps(typeof(Startup));
-            //});
-            //IMapper mapper = mapperConfig.CreateMapper();
-            //services.AddSingleton(mapper);
 
             services.AddControllers().AddNewtonsoftJson();
             services.AddSwaggerGen(c =>
@@ -69,6 +55,9 @@ namespace BasketService.API
             {
                 endpoints.MapControllers();
             });
+
+            // Subscribe all events.
+            app.UseEventSubscribing();
         }
 
         private void ConfigureExtensions(IServiceCollection services)
@@ -79,6 +68,13 @@ namespace BasketService.API
 
             services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddScoped<IBasketService, BasketService.Business.Services.BasketService>();
+
+            // RabbitMQ
+            services.AddSingleton<IRabbitMQBase, RabbitMQBase>();
+            services.AddSingleton<IEventManager, EventManager>();
+
+            // Register all EventHandlers.
+            services.AddEventHandlers();
         }
     }
 }

@@ -14,6 +14,8 @@ using ProductService.Query.Consumers;
 using ProductService.Command.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using ProductService.Query.Data.Common;
+using ProductService.EventBus.Models;
+using ProductService.EventBus.RabbitMQ;
 
 namespace ProductService.API
 {
@@ -64,6 +66,11 @@ namespace ProductService.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProductService.API", Version = "v1" });
             });
+
+            services.AddSingleton<IRabbitMQBase, RabbitMQBase>();
+            services.AddSingleton<IEventManager, EventManager>();
+
+            //Add event handlers
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,6 +93,8 @@ namespace ProductService.API
             {
                 endpoints.MapControllers();
             });
+
+            //Add subscribers
         }
     }
 }

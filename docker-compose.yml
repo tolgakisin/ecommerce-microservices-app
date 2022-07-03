@@ -1,8 +1,8 @@
 version: "3.4"
 services:
-  s_masstransit_rabbitmq: 
-    container_name: "c_masstransit_rabbitmq"
-    image: masstransit/rabbitmq
+  s_rabbitmq: 
+    container_name: "c_rabbitmq_management"
+    image: rabbitmq:3-management
     ports: 
       - 5672:5672
       - 15672:15672
