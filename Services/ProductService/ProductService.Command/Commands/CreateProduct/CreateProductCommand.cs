@@ -39,7 +39,6 @@ namespace ProductService.Command.Commands.CreateProduct
                     Price = entity.Price,
                     Description = entity.Description
                 });
-                //TODO: Add Transaction between command and query.
 
                 _ = await _productDbContext.SaveChangesAsync(cancellationToken);
             }

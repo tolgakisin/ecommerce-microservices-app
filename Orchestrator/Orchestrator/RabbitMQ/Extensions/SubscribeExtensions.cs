@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Orchestrator.Data.Common;
+using Orchestrator.Data.Entities;
 using Orchestrator.Saga.Models;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Orchestrator.RabbitMQ.Extensions
 {
@@ -49,30 +48,59 @@ namespace Orchestrator.RabbitMQ.Extensions
                 using (var scope = app.ApplicationServices.CreateScope())
                 {
                     var rabbitBus = scope.ServiceProvider.GetService<IRabbitBus>();
+                    var context = scope.ServiceProvider.GetService<Context>();
 
                     var bodyJson = System.Text.Encoding.UTF8.GetString(ea.Body.Span);
                     var message = JsonConvert.DeserializeObject<SagaModel>(bodyJson);
                     SagaModel response = null;
+
                     try
                     {
+                        var @event = context.GetEventByName(message.EventName);
+                        if (@event == null)
+                        {
+                            context.Save<EventLog>(new EventLog
+                            {
+                                EventId = message.EventId,
+                                Data = message.Data,
+                                ExecutionDate = DateTime.Now,
+                                State = Common.Enums.EventState.NotFound,
+                                ErrorMessage = $"{message.EventName} is not found."
+                            });
+
+                            if (message.IsSync)
+                                SyncPublish(channel, ea.BasicProperties, response);
+
+                            rabbitBus.CloseChannel();
+
+                            return;
+                        }
+
+                        message.EventId = @event.Id;
+
+                        context.Save<EventLog>(new EventLog
+                        {
+                            EventId = message.EventId,
+                            Data = message.Data,
+                            ExecutionDate = DateTime.Now,
+                            State = Common.Enums.EventState.Started
+                        });
+
                         response = await rabbitBus.SendMessageAsync(message);
 
                         if (message.IsSync)
-                        {
-                            //TODO: Add retry policy.
-                            var props = ea.BasicProperties;
-                            var replyProps = channel.CreateBasicProperties();
-                            replyProps.CorrelationId = props.CorrelationId;
-
-                            var serializedMessage = JsonConvert.SerializeObject(response);
-                            var responseBytes = Encoding.UTF8.GetBytes(serializedMessage);
-
-                            channel.BasicPublish(exchange: "", routingKey: props.ReplyTo, basicProperties: replyProps, body: responseBytes);
-                        }
+                            SyncPublish(channel, ea.BasicProperties, response);
                     }
                     catch (Exception ex)
                     {
-
+                        context.Save<EventLog>(new EventLog
+                        {
+                            EventId = message.EventId,
+                            Data = message.Data,
+                            ExecutionDate = DateTime.Now,
+                            State = Common.Enums.EventState.Error,
+                            ErrorMessage = ex.Message
+                        });
                     }
                 }
             };
@@ -80,6 +108,17 @@ namespace Orchestrator.RabbitMQ.Extensions
             channel.BasicConsume(queue: eventName,
                                  autoAck: true,
                                  consumer: consumer);
+        }
+
+        private static void SyncPublish(IModel channel, IBasicProperties props, SagaModel response)
+        {
+            var replyProps = channel.CreateBasicProperties();
+            replyProps.CorrelationId = props.CorrelationId;
+
+            var serializedMessage = JsonConvert.SerializeObject(response);
+            var responseBytes = Encoding.UTF8.GetBytes(serializedMessage);
+
+            channel.BasicPublish(exchange: "", routingKey: props.ReplyTo, basicProperties: replyProps, body: responseBytes);
         }
     }
 }

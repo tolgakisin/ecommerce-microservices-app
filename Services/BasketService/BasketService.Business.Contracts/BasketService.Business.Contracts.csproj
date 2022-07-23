@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.RabbitMQ\EventBus.RabbitMQ.csproj" />
     <ProjectReference Include="..\BasketService.Data.Contracts\BasketService.Data.Contracts.csproj" />
-    <ProjectReference Include="..\BasketService.EventBus\BasketService.EventBus\BasketService.EventBus.csproj" />
   </ItemGroup>
 
 </Project>

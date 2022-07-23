@@ -13,5 +13,6 @@ namespace BasketService.Business.Contracts.Services
         Task<CustomerBasket> UpdateBasketAsync(CustomerBasket customerBasket);
         Task<bool> ClearBasketAsync(string buyerId);
         Task<CustomerBasket> CheckoutBasketAsync(string buyerId);
+        Task TestEventBusAndOrchestration();
     }
 }

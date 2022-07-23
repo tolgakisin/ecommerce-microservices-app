@@ -1,3 +1,5 @@
+using EventBus.RabbitMQ.Models;
+using EventBus.RabbitMQ.RabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using PaymentService.API.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,16 +29,20 @@ namespace PaymentService.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PaymentService.API", Version = "v1" });
             });
+
+            services.AddSingleton<IRabbitMQBase, RabbitMQBase>();
+            services.AddSingleton<IEventManager, EventManager>();
+
+            services.AddScoped<IEventHandler<Event1>, Event1Handler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IEventManager eventManager)
         {
             if (env.IsDevelopment())
             {
@@ -54,6 +61,8 @@ namespace PaymentService.API
             {
                 endpoints.MapControllers();
             });
+
+            eventManager.Subscribe<Event1, Event1Handler>();
         }
     }
 }

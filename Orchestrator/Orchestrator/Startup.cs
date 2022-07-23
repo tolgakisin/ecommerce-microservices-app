@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Orchestrator.Data.Common;
 using Orchestrator.RabbitMQ;
 using Orchestrator.RabbitMQ.Extensions;
 
@@ -26,6 +28,11 @@ namespace Orchestrator
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Orchestrator", Version = "v1" });
+            });
+
+            services.AddDbContext<Context>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("Orchestrator.ConnectionString"));
             });
 
             services.AddSingleton<IRabbitMQBase, RabbitMQBase>();

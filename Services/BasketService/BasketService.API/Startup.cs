@@ -1,9 +1,10 @@
 using BasketService.API.Extensions;
 using BasketService.Business.Contracts.Services;
+using BasketService.Business.Events.EventTest;
 using BasketService.Data.Contracts.Repositories.Basket;
 using BasketService.Data.Repositories.Basket;
-using BasketService.EventBus.Models;
-using BasketService.EventBus.RabbitMQ;
+using EventBus.RabbitMQ.Models;
+using EventBus.RabbitMQ.RabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -35,7 +36,7 @@ namespace BasketService.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IEventManager eventManager)
         {
             if (env.IsDevelopment())
             {
@@ -57,7 +58,8 @@ namespace BasketService.API
             });
 
             // Subscribe all events.
-            app.UseEventSubscribing();
+            //app.UseEventSubscribing();
+            eventManager.Subscribe<Event2, Event2Handler>();
         }
 
         private void ConfigureExtensions(IServiceCollection services)

@@ -1,4 +1,4 @@
-﻿using BasketService.EventBus.Models;
+﻿using EventBus.RabbitMQ.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace BasketService.API.Extensions
     {
         public static void AddEventHandlers(this IServiceCollection services)
         {
-            var handlers = typeof(Startup).Assembly.GetTypes()
+            var handlers = typeof(BasketService.Business.Services.BasketService).Assembly.GetTypes()
                 .Where(x => x.IsClass && x.GetInterface(nameof(IEventHandler)) == typeof(IEventHandler));
 
             foreach (var item in handlers)

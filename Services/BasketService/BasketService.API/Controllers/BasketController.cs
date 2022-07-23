@@ -65,5 +65,13 @@ namespace BasketService.API.Controllers
                 return response;
             });
         }
+
+        [HttpGet]
+        public Task TestEventBusAndOrchestration()
+        {
+            _basketService.TestEventBusAndOrchestration();
+
+            return Task.CompletedTask;
+        }
     }
 }

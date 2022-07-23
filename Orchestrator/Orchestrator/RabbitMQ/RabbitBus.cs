@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Orchestrator.Common.Enums;
 using Orchestrator.Data.Common;
+using Orchestrator.Data.Entities;
 using Orchestrator.Saga.Models;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -14,7 +16,6 @@ namespace Orchestrator.RabbitMQ
 {
     public class RabbitBus : IRabbitBus
     {
-        private readonly IConfiguration _configuration;
         private IModel _channel;
         private readonly IRabbitMQBase _rabbitMQBase;
         private readonly BlockingCollection<string> _respQueue = new BlockingCollection<string>();
@@ -22,11 +23,10 @@ namespace Orchestrator.RabbitMQ
         private static readonly object _lock = new();
         private readonly Context _context;
 
-        public RabbitBus(IRabbitMQBase rabbitMQBase, IConfiguration configuration, Context context)
+        public RabbitBus(IRabbitMQBase rabbitMQBase, Context context)
         {
             _rabbitMQBase = rabbitMQBase;
             _channel = OpenChannel();
-            _configuration = configuration;
 
             _context = context;
         }
@@ -53,7 +53,7 @@ namespace Orchestrator.RabbitMQ
 
                 if (!message.IsSync) return null;
 
-                var isTaken = _respQueue.TryTake(out var responseMessage, TimeSpan.FromSeconds(30));
+                var isTaken = _respQueue.TryTake(out var responseMessage, TimeSpan.FromSeconds(200));
 
                 return responseMessage != null ? JsonConvert.DeserializeObject<T>(responseMessage) : null;
             });
@@ -62,9 +62,6 @@ namespace Orchestrator.RabbitMQ
 
         private void ReceiveMessage(IBasicProperties props, bool isSync)
         {
-            //var eventsConfig = _configuration.GetSection("Events");
-            //var events = eventsConfig.Get<List<string>>();
-
             var replyQueueName = _channel.QueueDeclare().QueueName;
             var correlationId = Guid.NewGuid().ToString();
             props.CorrelationId = correlationId;
@@ -78,21 +75,54 @@ namespace Orchestrator.RabbitMQ
                 var response = JsonConvert.DeserializeObject<SagaModel>(bodyJson);
 
                 string nextEventName = string.Empty;
+                int nextEventId = 0;
                 if (response.IsFailed)
                 {
+
+                    _context.Save<EventLog>(new EventLog
+                    {
+                        EventId = response.EventId,
+                        Data = response.Data,
+                        ExecutionDate = DateTime.Now,
+                        State = !response.IsReverseStarted ? EventState.Failed : !response.IsFinished ? EventState.ReverseStarted : EventState.ReverseFinished,
+                        ErrorMessage = response.ErrorMessage
+                    });
+
+                    if (!response.IsReverseStarted) response.IsReverseStarted = true;
+
                     var previousEvent = _context.GetPreviousEvent(response.EventName);
                     nextEventName = previousEvent?.Name; //Utils.GetPreviousEvent(events, response.EventName).EventName;
+                    nextEventId = previousEvent?.Id ?? 0;
                 }
                 else
                 {
+                    _context.Save<EventLog>(new EventLog
+                    {
+                        EventId = response.EventId,
+                        Data = response.Data,
+                        ExecutionDate = DateTime.Now,
+                        State = EventState.Finished
+                    });
+
                     var nextEvent = _context.GetNextEvent(response.EventName);
                     nextEventName = nextEvent?.Name; //Utils.GetNextEvent(events, response.EventName).EventName;
+                    nextEventId = nextEvent?.Id ?? 0;
                 }
 
                 if (!string.IsNullOrEmpty(nextEventName))
                 {
                     response.EventName = nextEventName;
+                    response.EventId = nextEventId;
                     PublishMessage(response, props);
+
+                    _context.Save<EventLog>(new EventLog
+                    {
+                        EventId = response.EventId,
+                        Data = response.Data,
+                        ExecutionDate = DateTime.Now,
+                        State = response.IsFailed ? !response.IsFinished ? EventState.ReverseStarted : EventState.ReverseFinished : EventState.Started,
+                        ErrorMessage = response.ErrorMessage
+                    });
                 }
                 else
                 {
@@ -133,7 +163,7 @@ namespace Orchestrator.RabbitMQ
             return _rabbitMQBase.CreateBus().CreateModel();
         }
 
-        private void CloseChannel()
+        public void CloseChannel()
         {
             if (_channel.IsOpen)
                 _channel.Close();

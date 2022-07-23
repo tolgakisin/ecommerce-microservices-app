@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.Core\EventBus.Core.csproj" />
     <ProjectReference Include="..\BasketService.Business.Contracts\BasketService.Business.Contracts.csproj" />
     <ProjectReference Include="..\BasketService.Common\BasketService.Common.csproj" />
     <ProjectReference Include="..\BasketService.Data\BasketService.Data.csproj" />

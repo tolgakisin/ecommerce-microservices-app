@@ -1,21 +1,16 @@
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Reflection;
-using System.Threading.Tasks;
-using MassTransit;
-using ProductService.Query.Consumers;
 using ProductService.Command.Data.Common;
-using Microsoft.EntityFrameworkCore;
+using ProductService.Query.Consumers;
 using ProductService.Query.Data.Common;
-using ProductService.EventBus.Models;
-using ProductService.EventBus.RabbitMQ;
+using System.Reflection;
 
 namespace ProductService.API
 {
@@ -41,10 +36,10 @@ namespace ProductService.API
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host("localhost", "/", c =>
+                    cfg.Host("localhost", 5673, "/", c =>
                     {
-                        c.Username("guest");
-                        c.Password("guest");
+                        c.Username("test");
+                        c.Password("test");
                     });
 
                     cfg.ConfigureEndpoints(context);
@@ -66,11 +61,6 @@ namespace ProductService.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProductService.API", Version = "v1" });
             });
-
-            services.AddSingleton<IRabbitMQBase, RabbitMQBase>();
-            services.AddSingleton<IEventManager, EventManager>();
-
-            //Add event handlers
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -93,8 +83,6 @@ namespace ProductService.API
             {
                 endpoints.MapControllers();
             });
-
-            //Add subscribers
         }
     }
 }

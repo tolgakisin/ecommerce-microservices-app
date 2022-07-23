@@ -1,12 +1,12 @@
 ﻿using BasketService.Business.Contracts.Services;
+using BasketService.Business.Events.EventTest;
 using BasketService.Common.Utils;
 using BasketService.Data.Contracts.Entities.Basket;
 using BasketService.Data.Contracts.Repositories.Basket;
-using BasketService.Data.Repositories.Basket;
+using EventBus.Core;
+using EventBus.RabbitMQ.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BasketService.Business.Services
@@ -14,9 +14,12 @@ namespace BasketService.Business.Services
     public class BasketService : IBasketService
     {
         private readonly IBasketRepository _basketRepository;
-        public BasketService(IBasketRepository basketRepository)
+        private readonly IEventManager _eventManager;
+
+        public BasketService(IBasketRepository basketRepository, IEventManager eventManager)
         {
             _basketRepository = basketRepository;
+            _eventManager = eventManager;
         }
 
         public async Task<CustomerBasket> GetBasketAsync(string buyerId)
@@ -68,6 +71,19 @@ namespace BasketService.Business.Services
             // Send BasketCheckoutEvent
 
             return customerBasket;
+        }
+
+        public Task TestEventBusAndOrchestration()
+        {
+            Event1 event1 = new Event1()
+            {
+                Data = "Event1",
+                IsSync = true
+            };
+
+            _eventManager.Publish(event1, EventNames.OrchestratorGeneralEvent);
+
+            return Task.CompletedTask;
         }
     }
 }

@@ -31,7 +31,6 @@ namespace ProductService.Command.Commands.DeleteProduct
                 _productDbContext.Products.Remove(entity);
 
                 await _publishEndpoint.Publish(new ProductDeletedEvent { Id = entity.Id });
-                //TODO Add Transaction between command and query.
 
                 _ = await _productDbContext.SaveChangesAsync();
             }

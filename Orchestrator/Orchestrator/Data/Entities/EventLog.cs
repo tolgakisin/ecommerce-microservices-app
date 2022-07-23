@@ -10,6 +10,7 @@ namespace Orchestrator.Data.Entities
         public string Data { get; set; }
         public DateTime ExecutionDate { get; set; }
         public EventState State { get; set; }
+        public string ErrorMessage { get; set; }
         public Guid UserId { get; set; }
     }
 }

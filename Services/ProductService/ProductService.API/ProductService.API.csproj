@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProductService.Command\ProductService.Command.csproj" />
-    <ProjectReference Include="..\ProductService.EventBus\ProductService.EventBus\ProductService.EventBus.csproj" />
     <ProjectReference Include="..\ProductService.Query\ProductService.Query.csproj" />
   </ItemGroup>
 
