@@ -74,13 +74,16 @@ namespace EventBus.RabbitMQ.Models
                     }
                     finally
                     {
-                        message.EventName = eventName;
+                        if (!string.IsNullOrEmpty(props.ReplyTo))
+                        {
+                            message.EventName = eventName;
 
-                        var serializedMessage = JsonConvert.SerializeObject(message);
-                        var responseBytes = Encoding.UTF8.GetBytes(serializedMessage);
+                            var serializedMessage = JsonConvert.SerializeObject(message);
+                            var responseBytes = Encoding.UTF8.GetBytes(serializedMessage);
 
-                        //TODO: Add retry policy
-                        _channel.BasicPublish(exchange: "", routingKey: props.ReplyTo, basicProperties: replyProps, body: responseBytes);
+                            //TODO: Add retry policy
+                            _channel.BasicPublish(exchange: "", routingKey: props.ReplyTo, basicProperties: replyProps, body: responseBytes);
+                        }
                     }
                 }
             };

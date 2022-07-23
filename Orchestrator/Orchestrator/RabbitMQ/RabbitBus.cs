@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Orchestrator.Common.Enums;
 using Orchestrator.Data.Common;
@@ -8,8 +9,6 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Orchestrator.RabbitMQ
@@ -21,17 +20,14 @@ namespace Orchestrator.RabbitMQ
         private readonly BlockingCollection<string> _respQueue = new BlockingCollection<string>();
         private const string exchangeName = "general-exchange";
         private static readonly object _lock = new();
-        private readonly Context _context;
 
-        public RabbitBus(IRabbitMQBase rabbitMQBase, Context context)
+        public RabbitBus(IRabbitMQBase rabbitMQBase)
         {
             _rabbitMQBase = rabbitMQBase;
             _channel = OpenChannel();
-
-            _context = context;
         }
 
-        public async Task<T> SendMessageAsync<T>(T message) where T : SagaModel
+        public async Task<T> SendMessageAsync<T>(T message, IApplicationBuilder app) where T : SagaModel
         {
             return await Task.Run(() =>
             {
@@ -48,7 +44,7 @@ namespace Orchestrator.RabbitMQ
 
                 var props = _channel.CreateBasicProperties();
 
-                ReceiveMessage(props, message.IsSync);
+                ReceiveMessage(props, message.IsSync, app);
                 PublishMessage(message, props);
 
                 if (!message.IsSync) return null;
@@ -60,7 +56,7 @@ namespace Orchestrator.RabbitMQ
 
         }
 
-        private void ReceiveMessage(IBasicProperties props, bool isSync)
+        private void ReceiveMessage(IBasicProperties props, bool isSync, IApplicationBuilder app)
         {
             var replyQueueName = _channel.QueueDeclare().QueueName;
             var correlationId = Guid.NewGuid().ToString();
@@ -71,66 +67,70 @@ namespace Orchestrator.RabbitMQ
 
             consumer.Received += (model, ea) =>
             {
-                var bodyJson = System.Text.Encoding.UTF8.GetString(ea.Body.Span);
-                var response = JsonConvert.DeserializeObject<SagaModel>(bodyJson);
-
-                string nextEventName = string.Empty;
-                int nextEventId = 0;
-                if (response.IsFailed)
+                using (var scope = app.ApplicationServices.CreateScope())
                 {
+                    var _context = scope.ServiceProvider.GetService<Context>();
+                    var bodyJson = System.Text.Encoding.UTF8.GetString(ea.Body.Span);
+                    var response = JsonConvert.DeserializeObject<SagaModel>(bodyJson);
 
-                    _context.Save<EventLog>(new EventLog
+                    string nextEventName = string.Empty;
+                    int nextEventId = 0;
+                    if (response.IsFailed)
                     {
-                        EventId = response.EventId,
-                        Data = response.Data,
-                        ExecutionDate = DateTime.Now,
-                        State = !response.IsReverseStarted ? EventState.Failed : !response.IsFinished ? EventState.ReverseStarted : EventState.ReverseFinished,
-                        ErrorMessage = response.ErrorMessage
-                    });
 
-                    if (!response.IsReverseStarted) response.IsReverseStarted = true;
+                        _context.Save<EventLog>(new EventLog
+                        {
+                            EventId = response.EventId,
+                            Data = response.Data,
+                            ExecutionDate = DateTime.Now,
+                            State = !response.IsReverseStarted ? EventState.Failed : !response.IsFinished ? EventState.ReverseStarted : EventState.ReverseFinished,
+                            ErrorMessage = response.ErrorMessage
+                        });
 
-                    var previousEvent = _context.GetPreviousEvent(response.EventName);
-                    nextEventName = previousEvent?.Name; //Utils.GetPreviousEvent(events, response.EventName).EventName;
-                    nextEventId = previousEvent?.Id ?? 0;
-                }
-                else
-                {
-                    _context.Save<EventLog>(new EventLog
+                        if (!response.IsReverseStarted) response.IsReverseStarted = true;
+
+                        var previousEvent = _context.GetPreviousEvent(response.EventName);
+                        nextEventName = previousEvent?.Name; //Utils.GetPreviousEvent(events, response.EventName).EventName;
+                        nextEventId = previousEvent?.Id ?? 0;
+                    }
+                    else
                     {
-                        EventId = response.EventId,
-                        Data = response.Data,
-                        ExecutionDate = DateTime.Now,
-                        State = EventState.Finished
-                    });
+                        _context.Save<EventLog>(new EventLog
+                        {
+                            EventId = response.EventId,
+                            Data = response.Data,
+                            ExecutionDate = DateTime.Now,
+                            State = EventState.Finished
+                        });
 
-                    var nextEvent = _context.GetNextEvent(response.EventName);
-                    nextEventName = nextEvent?.Name; //Utils.GetNextEvent(events, response.EventName).EventName;
-                    nextEventId = nextEvent?.Id ?? 0;
-                }
+                        var nextEvent = _context.GetNextEvent(response.EventName);
+                        nextEventName = nextEvent?.Name; //Utils.GetNextEvent(events, response.EventName).EventName;
+                        nextEventId = nextEvent?.Id ?? 0;
+                    }
 
-                if (!string.IsNullOrEmpty(nextEventName))
-                {
-                    response.EventName = nextEventName;
-                    response.EventId = nextEventId;
-                    PublishMessage(response, props);
-
-                    _context.Save<EventLog>(new EventLog
+                    if (!string.IsNullOrEmpty(nextEventName))
                     {
-                        EventId = response.EventId,
-                        Data = response.Data,
-                        ExecutionDate = DateTime.Now,
-                        State = response.IsFailed ? !response.IsFinished ? EventState.ReverseStarted : EventState.ReverseFinished : EventState.Started,
-                        ErrorMessage = response.ErrorMessage
-                    });
-                }
-                else
-                {
-                    CloseChannel();
+                        response.EventName = nextEventName;
+                        response.EventId = nextEventId;
+                        PublishMessage(response, props);
 
-                    if (isSync && ea.BasicProperties.CorrelationId == correlationId)
+                        _context.Save<EventLog>(new EventLog
+                        {
+                            EventId = response.EventId,
+                            Data = response.Data,
+                            ExecutionDate = DateTime.Now,
+                            State = response.IsFailed ? !response.IsFinished ? EventState.ReverseStarted : EventState.ReverseFinished : EventState.Started,
+                            ErrorMessage = response.ErrorMessage
+                        });
+                    }
+                    else
                     {
-                        _respQueue.Add(bodyJson);
+                        CloseChannel();
+
+                        if (isSync && ea.BasicProperties.CorrelationId == correlationId)
+                        {
+                            _respQueue.Add(bodyJson);
+                        }
                     }
                 }
             };

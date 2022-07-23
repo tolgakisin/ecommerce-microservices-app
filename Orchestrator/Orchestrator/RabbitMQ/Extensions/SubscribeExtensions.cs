@@ -24,17 +24,6 @@ namespace Orchestrator.RabbitMQ.Extensions
 
         public static void Consume(IApplicationBuilder app, IRabbitMQBase rabbitMQBase, IModel channel)
         {
-            if (channel == null || channel.IsClosed)
-            {
-                lock (_lock)
-                {
-                    if (channel == null || channel.IsClosed)
-                    {
-                        channel = rabbitMQBase.CreateBus().CreateModel();
-                    }
-                }
-            }
-
             string eventName = "orchestrator-general-event";
             channel.QueueDeclare(queue: eventName,
                      durable: false,
@@ -86,7 +75,7 @@ namespace Orchestrator.RabbitMQ.Extensions
                             State = Common.Enums.EventState.Started
                         });
 
-                        response = await rabbitBus.SendMessageAsync(message);
+                        response = await rabbitBus.SendMessageAsync(message, app);
 
                         if (message.IsSync)
                             SyncPublish(channel, ea.BasicProperties, response);
