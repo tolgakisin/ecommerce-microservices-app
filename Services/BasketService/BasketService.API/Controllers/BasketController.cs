@@ -2,6 +2,7 @@
 using BasketService.API.Contracts.Responses;
 using BasketService.API.Controllers.Base;
 using BasketService.Business.Contracts.Services;
+using BasketService.Data.Contracts.FakeEntities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -56,11 +57,13 @@ namespace BasketService.API.Controllers
         }
 
         [HttpPost]
-        public async Task<CustomerBasketResponse> CheckoutBasketAsync()
+        public async Task<CustomerBasketResponse> CheckoutBasketAsync(CheckoutBasketRequest request)
         {
             return await base.ExecuteAsync<CustomerBasketResponse>(async (response) =>
             {
-                _ = await _basketService.CheckoutBasketAsync(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
+                _ = await _basketService.CheckoutBasketAsync(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value,
+                    new CustomerAddress(request.CustomerAddress.City, request.CustomerAddress.Country, request.CustomerAddress.State, request.CustomerAddress.Street, request.CustomerAddress.ZipCode),
+                    new CustomerPayment(request.CustomerPayment.CardNumber, request.CustomerPayment.CardHolderName, request.CustomerPayment.ExpirationDate, request.CustomerPayment.CardSecurityNumber, request.CustomerPayment.CardTypeId));
 
                 return response;
             });

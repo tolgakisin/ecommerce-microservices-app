@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace PaymentService.API.Events
+namespace PaymentService.API.IntegrationEvents.Events
 {
     public class Event1Handler : IEventHandler<Event1>
     {

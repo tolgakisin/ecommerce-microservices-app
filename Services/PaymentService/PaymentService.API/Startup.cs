@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using PaymentService.API.Events;
+using PaymentService.API.IntegrationEvents.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;

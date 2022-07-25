@@ -1,7 +1,9 @@
 ﻿using BasketService.Business.Contracts.Services;
+using BasketService.Business.Events.Checkout;
 using BasketService.Business.Events.EventTest;
 using BasketService.Common.Utils;
 using BasketService.Data.Contracts.Entities.Basket;
+using BasketService.Data.Contracts.FakeEntities;
 using BasketService.Data.Contracts.Repositories.Basket;
 using EventBus.Core;
 using EventBus.RabbitMQ.Models;
@@ -56,7 +58,7 @@ namespace BasketService.Business.Services
             return isCleared;
         }
 
-        public async Task<CustomerBasket> CheckoutBasketAsync(string buyerId)
+        public async Task<CustomerBasket> CheckoutBasketAsync(string buyerId, CustomerAddress customerAddress, CustomerPayment customerPayment)
         {
             if (string.IsNullOrEmpty(buyerId))
                 ErrorManagement.ThrowError("Buyer is not found.");
@@ -66,9 +68,7 @@ namespace BasketService.Business.Services
             if (customerBasket == null || !customerBasket.BasketItems.Any())
                 ErrorManagement.ThrowError("Basket couldn't be sent.");
 
-            // Check Stock
-
-            // Send BasketCheckoutEvent
+            _eventManager.Publish(new OrderCreatedEvent(buyerId, customerBasket, customerAddress, customerPayment), EventNames.OrchestratorGeneralEvent);
 
             return customerBasket;
         }

@@ -11,5 +11,10 @@ namespace EventBus.Core
         public const string Event4 = "Event4";
         public const string Event5 = "Event5";
         public const string Event6 = "Event6";
+
+        public class BasketService
+        {
+            public const string OrderCreatedEvent = "OrderCreatedEvent";
+        }
     }
 }

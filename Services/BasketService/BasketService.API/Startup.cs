@@ -1,5 +1,7 @@
 using BasketService.API.Extensions;
 using BasketService.Business.Contracts.Services;
+using BasketService.Business.EventHandlers;
+using BasketService.Business.Events.Checkout;
 using BasketService.Business.Events.EventTest;
 using BasketService.Data.Contracts.Repositories.Basket;
 using BasketService.Data.Repositories.Basket;
@@ -59,7 +61,9 @@ namespace BasketService.API
 
             // Subscribe all events.
             //app.UseEventSubscribing();
+
             eventManager.Subscribe<Event2, Event2Handler>();
+            eventManager.Subscribe<OrderCreatedEvent, OrderCreatedEventHandler>();
         }
 
         private void ConfigureExtensions(IServiceCollection services)
@@ -76,7 +80,10 @@ namespace BasketService.API
             services.AddSingleton<IEventManager, EventManager>();
 
             // Register all EventHandlers.
-            services.AddEventHandlers();
+            //services.AddEventHandlers();
+
+            services.AddScoped<IEventHandler<Event2>, Event2Handler>();
+            services.AddScoped<IEventHandler<OrderCreatedEvent>, OrderCreatedEventHandler>();
         }
     }
 }
