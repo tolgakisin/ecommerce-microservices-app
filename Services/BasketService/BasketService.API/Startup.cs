@@ -1,8 +1,8 @@
 using BasketService.API.Extensions;
 using BasketService.Business.Contracts.Services;
-using BasketService.Business.EventHandlers;
-using BasketService.Business.Events.Checkout;
-using BasketService.Business.Events.EventTest;
+using BasketService.Business.IntegrationEvents.EventHandlers;
+using BasketService.Business.IntegrationEvents.Events;
+using BasketService.Business.IntegrationEvents.Events.EventTest;
 using BasketService.Data.Contracts.Repositories.Basket;
 using BasketService.Data.Repositories.Basket;
 using EventBus.RabbitMQ.Models;

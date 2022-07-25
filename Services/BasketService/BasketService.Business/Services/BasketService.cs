@@ -1,6 +1,6 @@
 ﻿using BasketService.Business.Contracts.Services;
-using BasketService.Business.Events.Checkout;
-using BasketService.Business.Events.EventTest;
+using BasketService.Business.IntegrationEvents.Events;
+using BasketService.Business.IntegrationEvents.Events.EventTest;
 using BasketService.Common.Utils;
 using BasketService.Data.Contracts.Entities.Basket;
 using BasketService.Data.Contracts.FakeEntities;
@@ -68,7 +68,7 @@ namespace BasketService.Business.Services
             if (customerBasket == null || !customerBasket.BasketItems.Any())
                 ErrorManagement.ThrowError("Basket couldn't be sent.");
 
-            _eventManager.Publish(new OrderCreatedEvent(buyerId, customerBasket, customerAddress, customerPayment), EventNames.OrchestratorGeneralEvent);
+            _eventManager.Publish(new OrderCreatedEvent(Guid.Parse(buyerId), customerBasket, customerAddress, customerPayment), EventNames.OrchestratorGeneralEvent);
 
             return customerBasket;
         }

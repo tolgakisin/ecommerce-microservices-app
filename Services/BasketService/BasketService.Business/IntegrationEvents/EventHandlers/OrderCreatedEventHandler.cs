@@ -1,13 +1,10 @@
 ﻿using BasketService.Business.Contracts.Services;
-using BasketService.Business.Events.Checkout;
+using BasketService.Business.IntegrationEvents.Events;
 using EventBus.RabbitMQ.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace BasketService.Business.EventHandlers
+namespace BasketService.Business.IntegrationEvents.EventHandlers
 {
     public class OrderCreatedEventHandler : IEventHandler<OrderCreatedEvent>
     {
@@ -20,7 +17,7 @@ namespace BasketService.Business.EventHandlers
 
         public async Task<OrderCreatedEvent> Handle(OrderCreatedEvent @event)
         {
-            await _basketService.ClearBasketAsync(@event.UserId);
+            await _basketService.ClearBasketAsync(@event.UserId.ToString());
 
             return @event;
         }

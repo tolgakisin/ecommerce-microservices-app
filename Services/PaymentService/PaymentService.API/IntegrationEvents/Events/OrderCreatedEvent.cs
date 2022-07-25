@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PaymentService.API.IntegrationEvents.Events
 {
-    [Event(EventNames.BasketService.OrderCreatedEvent)]
+    [Event(EventNames.OrderCreatedEvent)]
     public class OrderCreatedEvent : BaseEvent
     {
         public OrderCreatedEvent()
@@ -17,7 +17,7 @@ namespace PaymentService.API.IntegrationEvents.Events
 
         }
 
-        public OrderCreatedEvent(string userId, CustomerBasket customerBasket, CustomerAddress customerAddress, CustomerPayment customerPayment)
+        public OrderCreatedEvent(Guid userId, CustomerBasket customerBasket, CustomerAddress customerAddress, CustomerPayment customerPayment)
         {
             UserId = userId;
             CustomerBasket = customerBasket;
@@ -25,7 +25,7 @@ namespace PaymentService.API.IntegrationEvents.Events
             CustomerPayment = customerPayment;
         }
 
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         public CustomerBasket CustomerBasket { get; set; }
         public CustomerAddress CustomerAddress { get; set; }
         public CustomerPayment CustomerPayment { get; set; }

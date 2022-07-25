@@ -2,7 +2,7 @@
 using EventBus.RabbitMQ.Models;
 using EventBus.RabbitMQ.Utils;
 
-namespace BasketService.Business.Events.EventTest
+namespace BasketService.Business.IntegrationEvents.Events.EventTest
 {
     [Event(EventNames.Event1)]
     public class Event1 : BaseEvent

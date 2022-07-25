@@ -5,9 +5,9 @@ using EventBus.RabbitMQ.Models;
 using EventBus.RabbitMQ.Utils;
 using System;
 
-namespace BasketService.Business.Events.Checkout
+namespace BasketService.Business.IntegrationEvents.Events
 {
-    [Event(EventNames.BasketService.OrderCreatedEvent)]
+    [Event(EventNames.OrderCreatedEvent)]
     public class OrderCreatedEvent : BaseEvent
     {
         public OrderCreatedEvent()
@@ -15,7 +15,7 @@ namespace BasketService.Business.Events.Checkout
 
         }
 
-        public OrderCreatedEvent(string userId, CustomerBasket customerBasket, CustomerAddress customerAddress, CustomerPayment customerPayment)
+        public OrderCreatedEvent(Guid userId, CustomerBasket customerBasket, CustomerAddress customerAddress, CustomerPayment customerPayment)
         {
             UserId = userId;
             CustomerBasket = customerBasket;
@@ -23,7 +23,7 @@ namespace BasketService.Business.Events.Checkout
             CustomerPayment = customerPayment;
         }
 
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         public CustomerBasket CustomerBasket { get; set; }
         public CustomerAddress CustomerAddress { get; set; }
         public CustomerPayment CustomerPayment { get; set; }
