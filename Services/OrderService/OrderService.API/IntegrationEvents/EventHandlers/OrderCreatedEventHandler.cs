@@ -15,7 +15,7 @@ namespace OrderService.API.IntegrationEvents.EventHandlers
             _eventManager = eventManager;
         }
 
-        public Task<OrderCreatedEvent> Handle(OrderCreatedEvent @event)
+        public Task Handle(OrderCreatedEvent @event)
         {
             // TODO: Create Order
 
@@ -23,10 +23,10 @@ namespace OrderService.API.IntegrationEvents.EventHandlers
 
             _eventManager.Publish(new OrderStartedEvent(@event.UserId, orderId), EventNames.OrchestratorGeneralEvent);
 
-            return Task.FromResult(@event);
+            return Task.CompletedTask;
         }
 
-        public Task<OrderCreatedEvent> HandleReverse(OrderCreatedEvent @event)
+        public Task HandleReverse(OrderCreatedEvent @event)
         {
             throw new NotImplementedException();
         }

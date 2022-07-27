@@ -79,11 +79,11 @@ namespace BasketService.Business.Services
             {
                 Data = "Event1",
                 Name = "Tolga",
-                Surname = "Kişin"
-                //IsSync = true
+                Surname = "TestSurname",
+                IsSync = true
             };
 
-            _eventManager.Publish(event1, EventNames.OrchestratorGeneralEvent);
+            var result = _eventManager.Publish(event1, EventNames.OrchestratorGeneralEvent);
 
             return Task.CompletedTask;
         }

@@ -7,14 +7,14 @@ namespace OrderService.API.IntegrationEvents.EventHandlers
 {
     public class PaymentSuccessEventHandler : IEventHandler<PaymentSuccessEvent>
     {
-        public Task<PaymentSuccessEvent> Handle(PaymentSuccessEvent @event)
+        public Task Handle(PaymentSuccessEvent @event)
         {
             //TODO: Change status of order on DB
 
-            return Task.FromResult(@event);
+            return Task.CompletedTask;
         }
 
-        public Task<PaymentSuccessEvent> HandleReverse(PaymentSuccessEvent @event)
+        public Task HandleReverse(PaymentSuccessEvent @event)
         {
             throw new NotImplementedException();
         }

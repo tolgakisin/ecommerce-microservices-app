@@ -18,7 +18,7 @@ namespace PaymentService.API.IntegrationEvents.EventHandlers
             _eventManager = eventManager;
         }
 
-        public Task<OrderStartedEvent> Handle(OrderStartedEvent @event)
+        public Task Handle(OrderStartedEvent @event)
         {
             // Check Payment process
             bool paymentSuccess = true;
@@ -30,10 +30,10 @@ namespace PaymentService.API.IntegrationEvents.EventHandlers
             else
                 _eventManager.Publish(new PaymentFailedEvent(@event.UserId, @event.OrderId, $"Payment error has occured. OrderId: {@event.OrderId}"), EventNames.OrchestratorGeneralEvent);
 
-            return Task.FromResult(@event);
+            return Task.CompletedTask;
         }
 
-        public Task<OrderStartedEvent> HandleReverse(OrderStartedEvent @event)
+        public Task HandleReverse(OrderStartedEvent @event)
         {
             throw new NotImplementedException();
         }

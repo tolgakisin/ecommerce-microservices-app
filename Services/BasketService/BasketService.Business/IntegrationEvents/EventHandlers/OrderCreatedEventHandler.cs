@@ -15,14 +15,14 @@ namespace BasketService.Business.IntegrationEvents.EventHandlers
             _basketService = basketService;
         }
 
-        public async Task<OrderCreatedEvent> Handle(OrderCreatedEvent @event)
+        public Task Handle(OrderCreatedEvent @event)
         {
             //await _basketService.ClearBasketAsync(@event.UserId.ToString());
 
-            return @event;
+            return Task.CompletedTask;
         }
 
-        public Task<OrderCreatedEvent> HandleReverse(OrderCreatedEvent @event)
+        public Task HandleReverse(OrderCreatedEvent @event)
         {
             throw new NotImplementedException();
         }

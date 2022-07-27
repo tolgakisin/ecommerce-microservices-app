@@ -4,8 +4,8 @@ namespace EventBus.RabbitMQ.Models
 {
     public interface IEventHandler<TEvent> : IEventHandler where TEvent : IEvent
     {
-        Task<TEvent> Handle(TEvent @event);
-        Task<TEvent> HandleReverse(TEvent @event);
+        Task Handle(TEvent @event);
+        Task HandleReverse(TEvent @event);
     }
 
     public interface IEventHandler

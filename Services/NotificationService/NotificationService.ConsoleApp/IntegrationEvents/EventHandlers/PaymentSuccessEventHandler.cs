@@ -10,14 +10,14 @@ namespace NotificationService.ConsoleApp.IntegrationEvents.EventHandlers
 {
     public class PaymentSuccessEventHandler : IEventHandler<PaymentSuccessEvent>
     {
-        public Task<PaymentSuccessEvent> Handle(PaymentSuccessEvent @event)
+        public Task Handle(PaymentSuccessEvent @event)
         {
             Console.WriteLine($"Payment success. UserId:{@event.UserId} OrderId:{@event.OrderId}");
 
-            return Task.FromResult(@event);
+            return Task.CompletedTask;
         }
 
-        public Task<PaymentSuccessEvent> HandleReverse(PaymentSuccessEvent @event)
+        public Task HandleReverse(PaymentSuccessEvent @event)
         {
             throw new NotImplementedException();
         }

@@ -10,14 +10,14 @@ namespace NotificationService.ConsoleApp.IntegrationEvents.EventHandlers
     [Event(EventNames.PaymentFailedEvent)]
     public class PaymentFailedEventHandler : IEventHandler<PaymentFailedEvent>
     {
-        public Task<PaymentFailedEvent> Handle(PaymentFailedEvent @event)
+        public Task Handle(PaymentFailedEvent @event)
         {
             Console.WriteLine($"Payment Failed. UserId:{@event.UserId} OrderId:{@event.OrderId} Message:{@event.ValidationMessage}");
 
-            return Task.FromResult(@event);
+            return Task.CompletedTask;
         }
 
-        public Task<PaymentFailedEvent> HandleReverse(PaymentFailedEvent @event)
+        public Task HandleReverse(PaymentFailedEvent @event)
         {
             throw new NotImplementedException();
         }

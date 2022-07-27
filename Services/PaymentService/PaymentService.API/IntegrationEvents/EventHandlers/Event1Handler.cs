@@ -6,18 +6,18 @@ namespace PaymentService.API.IntegrationEvents.Events
 {
     public class Event1Handler : IEventHandler<Event1>
     {
-        public Task<Event1> Handle(Event1 @event)
+        public Task Handle(Event1 @event)
         {
             @event.Data += "Event1 is started.";
 
-            return Task.FromResult(@event);
+            return Task.CompletedTask;
         }
 
-        public Task<Event1> HandleReverse(Event1 @event)
+        public Task HandleReverse(Event1 @event)
         {
             @event.Data += "Event1 is reversed.";
 
-            return Task.FromResult(@event);
+            return Task.CompletedTask;
         }
     }
 }

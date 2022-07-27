@@ -46,7 +46,7 @@ namespace EventBus.RabbitMQ.Models
             }
         }
 
-        public IEvent Publish(IEvent @event, string publishEventName = null)
+        public TEvent Publish<TEvent>(TEvent @event, string publishEventName = null) where TEvent : IEvent
         {
             @event.EventName = Utils.Utils.GetEventNameFromAttr(@event.GetType()) ?? @event.GetType().Name;
 
@@ -100,10 +100,10 @@ namespace EventBus.RabbitMQ.Models
                 {
                     var isTaken = _respQueue.TryTake(out var response, TimeSpan.FromSeconds(200));
 
-                    return response == null ? null : JsonConvert.DeserializeObject<BaseEvent>(response);
+                    return response == null ? default : JsonConvert.DeserializeObject<TEvent>(response);
                 }
 
-                return null;
+                return default;
             }
         }
 
