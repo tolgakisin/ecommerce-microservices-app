@@ -62,6 +62,7 @@ namespace BasketService.API
             // Subscribe all events.
             //app.UseEventSubscribing();
 
+            eventManager.Subscribe<Event1, Event1Handler>();
             eventManager.Subscribe<Event2, Event2Handler>();
             eventManager.Subscribe<OrderCreatedEvent, OrderCreatedEventHandler>();
         }
@@ -82,6 +83,7 @@ namespace BasketService.API
             // Register all EventHandlers.
             //services.AddEventHandlers();
 
+            services.AddScoped<IEventHandler<Event1>, Event1Handler>();
             services.AddScoped<IEventHandler<Event2>, Event2Handler>();
             services.AddScoped<IEventHandler<OrderCreatedEvent>, OrderCreatedEventHandler>();
         }

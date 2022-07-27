@@ -64,7 +64,7 @@ namespace PaymentService.API
                 endpoints.MapControllers();
             });
 
-            eventManager.Subscribe<Event1, Event1Handler>();
+            //eventManager.Subscribe<Event1, Event1Handler>();
             eventManager.Subscribe<OrderStartedEvent, OrderStartedEventHandler>();
         }
     }

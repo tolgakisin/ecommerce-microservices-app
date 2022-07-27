@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Orchestrator.Data.Common;
 using Orchestrator.Data.Entities;
 using Orchestrator.Saga.Models;
@@ -19,10 +20,10 @@ namespace Orchestrator.RabbitMQ.Extensions
         {
             var _channel = rabbitMQBase.CreateBus().CreateModel();
 
-            Consume(app, rabbitMQBase, _channel);
+            Consume(app, _channel);
         }
 
-        public static void Consume(IApplicationBuilder app, IRabbitMQBase rabbitMQBase, IModel channel)
+        public static void Consume(IApplicationBuilder app, IModel channel)
         {
             string eventName = "orchestrator-general-event";
             channel.QueueDeclare(queue: eventName,
@@ -40,52 +41,54 @@ namespace Orchestrator.RabbitMQ.Extensions
                     var context = scope.ServiceProvider.GetService<Context>();
 
                     var bodyJson = System.Text.Encoding.UTF8.GetString(ea.Body.Span);
-                    var message = JsonConvert.DeserializeObject<SagaModel>(bodyJson);
-                    SagaModel response = null;
+
+                    var objMessage = JObject.Parse(bodyJson);
+                    var sagaMessage = objMessage.ToObject<SagaModel>();
 
                     try
                     {
-                        var @event = context.GetEventByName(message.EventName);
+                        var @event = context.GetEventByName(sagaMessage.EventName);
                         if (@event == null)
                         {
                             context.Save<EventLog>(new EventLog
                             {
-                                EventId = message.EventId,
-                                Data = message.Data,
+                                EventId = sagaMessage.EventId,
+                                Data = sagaMessage.Data,
                                 ExecutionDate = DateTime.Now,
                                 State = Common.Enums.EventState.NotFound,
-                                ErrorMessage = $"{message.EventName} is not found."
+                                ErrorMessage = $"{sagaMessage.EventName} is not found."
                             });
 
-                            if (message.IsSync)
-                                SyncPublish(channel, ea.BasicProperties, response);
+                            if (sagaMessage.IsSync)
+                                SyncPublish(channel, ea.BasicProperties, null);
 
                             rabbitBus.CloseChannel();
 
                             return;
                         }
 
-                        message.EventId = @event.Id;
+                        objMessage[nameof(sagaMessage.EventId)] = @event.Id;
+                        sagaMessage.EventId = @event.Id;
 
                         context.Save<EventLog>(new EventLog
                         {
-                            EventId = message.EventId,
-                            Data = message.Data,
+                            EventId = sagaMessage.EventId,
+                            Data = sagaMessage.Data,
                             ExecutionDate = DateTime.Now,
                             State = Common.Enums.EventState.Started
                         });
 
-                        response = await rabbitBus.SendMessageAsync(message, app);
+                        var response = await rabbitBus.SendMessageAsync(objMessage, sagaMessage, app);
 
-                        if (message.IsSync)
+                        if (sagaMessage.IsSync)
                             SyncPublish(channel, ea.BasicProperties, response);
                     }
                     catch (Exception ex)
                     {
                         context.Save<EventLog>(new EventLog
                         {
-                            EventId = message.EventId,
-                            Data = message.Data,
+                            EventId = sagaMessage.EventId,
+                            Data = sagaMessage.Data,
                             ExecutionDate = DateTime.Now,
                             State = Common.Enums.EventState.Error,
                             ErrorMessage = ex.Message
@@ -99,7 +102,7 @@ namespace Orchestrator.RabbitMQ.Extensions
                                  consumer: consumer);
         }
 
-        private static void SyncPublish(IModel channel, IBasicProperties props, SagaModel response)
+        private static void SyncPublish(IModel channel, IBasicProperties props, object response)
         {
             var replyProps = channel.CreateBasicProperties();
             replyProps.CorrelationId = props.CorrelationId;

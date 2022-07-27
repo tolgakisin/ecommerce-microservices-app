@@ -17,7 +17,7 @@ namespace BasketService.Business.IntegrationEvents.EventHandlers
 
         public async Task<OrderCreatedEvent> Handle(OrderCreatedEvent @event)
         {
-            await _basketService.ClearBasketAsync(@event.UserId.ToString());
+            //await _basketService.ClearBasketAsync(@event.UserId.ToString());
 
             return @event;
         }

@@ -78,7 +78,9 @@ namespace BasketService.Business.Services
             Event1 event1 = new Event1()
             {
                 Data = "Event1",
-                IsSync = true
+                Name = "Tolga",
+                Surname = "Kişin"
+                //IsSync = true
             };
 
             _eventManager.Publish(event1, EventNames.OrchestratorGeneralEvent);

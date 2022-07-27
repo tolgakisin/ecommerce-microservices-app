@@ -7,5 +7,7 @@ namespace BasketService.Business.IntegrationEvents.Events.EventTest
     [Event(EventNames.Event2)]
     public class Event2 : BaseEvent
     {
+        public string Name { get; set; }
+        public string Surname { get; set; }
     }
 }

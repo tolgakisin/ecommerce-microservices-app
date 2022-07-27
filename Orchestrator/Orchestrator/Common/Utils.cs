@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Orchestrator.Common
 {
-    public class Utils
+    public static class Utils
     {
         public static (string EventName, bool IsLastEvent) GetNextEvent(List<string> events, string currentEventName)
         {
@@ -41,6 +41,12 @@ namespace Orchestrator.Common
             }
 
             return (previousEventName, isLastEvent);
+        }
+
+        public static void SetCustomValue(this object obj, string propertyName, object value)
+        {
+            var property = obj.GetType().GetProperty(propertyName);
+            property.SetValue(obj, value);
         }
     }
 }
