@@ -1,17 +1,18 @@
 ﻿using EventBus.Core;
 using EventBus.RabbitMQ.Models;
 using EventBus.RabbitMQ.Utils;
-using PaymentService.API.EventModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace PaymentService.API.IntegrationEvents.Events
+namespace OrderService.API.IntegrationEvents.Events
 {
     [Event(EventNames.OrderStartedEvent)]
     public class OrderStartedEvent : BaseEvent
     {
+        public OrderStartedEvent()
+        {
+
+        }
+
         public OrderStartedEvent(Guid userId, Guid orderId)
         {
             UserId = userId;

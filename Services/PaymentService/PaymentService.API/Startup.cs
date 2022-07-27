@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using PaymentService.API.IntegrationEvents.EventHandlers;
 using PaymentService.API.IntegrationEvents.Events;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,7 @@ namespace PaymentService.API
             services.AddSingleton<IEventManager, EventManager>();
 
             services.AddScoped<IEventHandler<Event1>, Event1Handler>();
+            services.AddScoped<IEventHandler<OrderStartedEvent>, OrderStartedEventHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +65,7 @@ namespace PaymentService.API
             });
 
             eventManager.Subscribe<Event1, Event1Handler>();
+            eventManager.Subscribe<OrderStartedEvent, OrderStartedEventHandler>();
         }
     }
 }

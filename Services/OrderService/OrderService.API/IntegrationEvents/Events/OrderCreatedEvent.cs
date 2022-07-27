@@ -1,13 +1,10 @@
 ﻿using EventBus.Core;
 using EventBus.RabbitMQ.Models;
 using EventBus.RabbitMQ.Utils;
-using PaymentService.API.EventModels;
+using OrderService.API.EventModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace PaymentService.API.IntegrationEvents.Events
+namespace OrderService.API.IntegrationEvents.Events
 {
     [Event(EventNames.OrderCreatedEvent)]
     public class OrderCreatedEvent : BaseEvent

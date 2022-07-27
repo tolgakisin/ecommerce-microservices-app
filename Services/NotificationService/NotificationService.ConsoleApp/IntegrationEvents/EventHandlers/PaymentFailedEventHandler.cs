@@ -12,7 +12,7 @@ namespace NotificationService.ConsoleApp.IntegrationEvents.EventHandlers
     {
         public Task<PaymentFailedEvent> Handle(PaymentFailedEvent @event)
         {
-            Console.WriteLine(@event.ValidationMessage);
+            Console.WriteLine($"Payment Failed. UserId:{@event.UserId} OrderId:{@event.OrderId} Message:{@event.ValidationMessage}");
 
             return Task.FromResult(@event);
         }

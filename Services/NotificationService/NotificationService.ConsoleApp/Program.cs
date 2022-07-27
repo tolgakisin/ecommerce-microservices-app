@@ -24,6 +24,7 @@ namespace NotificationService.ConsoleApp
             var _eventManager = serviceProvider.GetService<IEventManager>();
 
             _eventManager.Subscribe<PaymentFailedEvent, PaymentFailedEventHandler>();
+            _eventManager.Subscribe<PaymentSuccessEvent, PaymentSuccessEventHandler>();
 
             Console.WriteLine("Hello World!");
         }

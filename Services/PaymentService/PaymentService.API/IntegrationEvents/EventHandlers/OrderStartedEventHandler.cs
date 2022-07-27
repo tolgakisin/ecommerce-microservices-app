@@ -9,32 +9,31 @@ using System.Threading.Tasks;
 
 namespace PaymentService.API.IntegrationEvents.EventHandlers
 {
-    [Event(EventNames.OrderCreatedEvent)]
-    public class OrderCreatedEventHandler : IEventHandler<OrderCreatedEvent>
+    public class OrderStartedEventHandler : IEventHandler<OrderStartedEvent>
     {
         private readonly IEventManager _eventManager;
 
-        public OrderCreatedEventHandler(IEventManager eventManager)
+        public OrderStartedEventHandler(IEventManager eventManager)
         {
             _eventManager = eventManager;
         }
 
-        public Task<OrderCreatedEvent> Handle(OrderCreatedEvent @event)
+        public Task<OrderStartedEvent> Handle(OrderStartedEvent @event)
         {
             // Check Payment process
             bool paymentSuccess = true;
 
             if (paymentSuccess)
             {
-                _eventManager.Publish(new OrderStartedEvent(@event.UserId, @event.CustomerBasket, @event.CustomerAddress, @event.CustomerPayment), EventNames.OrchestratorGeneralEvent);
+                _eventManager.Publish(new PaymentSuccessEvent(@event.UserId, @event.OrderId));
             }
             else
-                _eventManager.Publish(new PaymentFailedEvent(@event.UserId, "Payment error has occured."), EventNames.OrchestratorGeneralEvent);
+                _eventManager.Publish(new PaymentFailedEvent(@event.UserId, @event.OrderId, $"Payment error has occured. OrderId: {@event.OrderId}"), EventNames.OrchestratorGeneralEvent);
 
             return Task.FromResult(@event);
         }
 
-        public Task<OrderCreatedEvent> HandleReverse(OrderCreatedEvent @event)
+        public Task<OrderStartedEvent> HandleReverse(OrderStartedEvent @event)
         {
             throw new NotImplementedException();
         }

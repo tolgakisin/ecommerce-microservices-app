@@ -5,11 +5,10 @@ using System;
 
 namespace NotificationService.ConsoleApp.IntegrationEvents.Events
 {
-    [Event(EventNames.PaymentFailedEvent)]
-    public class PaymentFailedEvent : BaseEvent
+    [Event(EventNames.PaymentSuccessEvent)]
+    public class PaymentSuccessEvent : BaseEvent
     {
         public Guid UserId { get; set; }
         public Guid OrderId { get; set; }
-        public string ValidationMessage { get; set; }
     }
 }
