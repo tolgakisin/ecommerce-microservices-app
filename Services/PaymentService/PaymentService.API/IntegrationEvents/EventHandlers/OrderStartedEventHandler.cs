@@ -28,7 +28,7 @@ namespace PaymentService.API.IntegrationEvents.EventHandlers
                 _eventManager.Publish(new PaymentSuccessEvent(@event.UserId, @event.OrderId));
             }
             else
-                _eventManager.Publish(new PaymentFailedEvent(@event.UserId, @event.OrderId, $"Payment error has occured. OrderId: {@event.OrderId}"), EventNames.OrchestratorGeneralEvent);
+                _eventManager.Publish(new PaymentFailedEvent(@event.UserId, @event.OrderId, $"Payment error has occured. OrderId: {@event.OrderId}"));
 
             return Task.CompletedTask;
         }

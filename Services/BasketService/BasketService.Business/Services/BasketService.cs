@@ -68,7 +68,7 @@ namespace BasketService.Business.Services
             if (customerBasket == null || !customerBasket.BasketItems.Any())
                 ErrorManagement.ThrowError("Basket couldn't be sent.");
 
-            _eventManager.Publish(new OrderCreatedEvent(Guid.Parse(buyerId), customerBasket, customerAddress, customerPayment), EventNames.OrchestratorGeneralEvent);
+            _eventManager.Publish(new OrderCreatedEvent(Guid.Parse(buyerId), customerBasket, customerAddress, customerPayment));
 
             return customerBasket;
         }
@@ -83,7 +83,7 @@ namespace BasketService.Business.Services
                 IsSync = true
             };
 
-            var result = _eventManager.Publish(event1, EventNames.OrchestratorGeneralEvent);
+            var result = _eventManager.Publish(event1);
 
             return Task.CompletedTask;
         }

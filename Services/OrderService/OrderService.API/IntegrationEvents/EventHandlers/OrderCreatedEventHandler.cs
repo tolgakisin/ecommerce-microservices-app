@@ -21,7 +21,7 @@ namespace OrderService.API.IntegrationEvents.EventHandlers
 
             Guid orderId = Guid.NewGuid();
 
-            _eventManager.Publish(new OrderStartedEvent(@event.UserId, orderId), EventNames.OrchestratorGeneralEvent);
+            _eventManager.Publish(new OrderStartedEvent(@event.UserId, orderId));
 
             return Task.CompletedTask;
         }

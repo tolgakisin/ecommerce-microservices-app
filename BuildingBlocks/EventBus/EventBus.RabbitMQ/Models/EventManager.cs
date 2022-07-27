@@ -1,4 +1,5 @@
-﻿using EventBus.RabbitMQ.RabbitMQ;
+﻿using EventBus.Core;
+using EventBus.RabbitMQ.RabbitMQ;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -46,14 +47,14 @@ namespace EventBus.RabbitMQ.Models
             }
         }
 
-        public TEvent Publish<TEvent>(TEvent @event, string publishEventName = null) where TEvent : IEvent
+        public TEvent Publish<TEvent>(TEvent @event, bool isOrchestration = true) where TEvent : IEvent
         {
             @event.EventName = Utils.Utils.GetEventNameFromAttr(@event.GetType()) ?? @event.GetType().Name;
 
             //TODO: Add retry policy.
             using (var _channel = OpenChannel())
             {
-                string eventName = publishEventName ?? Utils.Utils.GetEventNameFromAttr(@event.GetType());
+                string eventName = isOrchestration ? EventNames.OrchestratorGeneralEvent : Utils.Utils.GetEventNameFromAttr(@event.GetType());
                 string exchangeName = "orchestrator-exchange";
 
                 var props = _channel.CreateBasicProperties();

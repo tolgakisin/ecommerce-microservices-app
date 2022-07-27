@@ -4,6 +4,6 @@
     {
         void Subscribe<TEvent, TEventHandler>() where TEvent : IEvent where TEventHandler : IEventHandler<TEvent>;
         void UnSubscribe<TEvent>() where TEvent : IEvent;
-        TEvent Publish<TEvent>(TEvent @event, string publishEventName = null) where TEvent : IEvent;
+        TEvent Publish<TEvent>(TEvent @event, bool isOrchestration = true) where TEvent : IEvent;
     }
 }
