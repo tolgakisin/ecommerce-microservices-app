@@ -5,7 +5,7 @@ using System;
 
 namespace OrderService.API.IntegrationEvents.Events
 {
-    [Event(EventNames.OrderStartedEvent)]
+    [Event(EventNames.Order.OrderStartedEvent)]
     public class OrderStartedEvent : BaseEvent
     {
         public OrderStartedEvent()

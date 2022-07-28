@@ -6,7 +6,7 @@ using System;
 
 namespace PaymentService.API.IntegrationEvents.Events
 {
-    [Event(EventNames.PaymentFailedEvent)]
+    [Event(EventNames.Payment.PaymentFailedEvent)]
     public class PaymentFailedEvent : BaseEvent
     {
         public PaymentFailedEvent(Guid userId, Guid orderId, string validationMessage)

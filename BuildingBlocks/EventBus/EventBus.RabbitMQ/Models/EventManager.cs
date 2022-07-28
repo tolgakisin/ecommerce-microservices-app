@@ -54,7 +54,7 @@ namespace EventBus.RabbitMQ.Models
             //TODO: Add retry policy.
             using (var _channel = OpenChannel())
             {
-                string eventName = isOrchestration ? EventNames.OrchestratorGeneralEvent : Utils.Utils.GetEventNameFromAttr(@event.GetType());
+                string eventName = isOrchestration ? EventNames.Orchestrator.OrchestratorGeneralEvent : Utils.Utils.GetEventNameFromAttr(@event.GetType());
                 string exchangeName = "orchestrator-exchange";
 
                 var props = _channel.CreateBasicProperties();

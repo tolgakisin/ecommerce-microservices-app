@@ -7,7 +7,7 @@ using System;
 
 namespace BasketService.Business.IntegrationEvents.Events
 {
-    [Event(EventNames.OrderCreatedEvent)]
+    [Event(EventNames.Order.OrderCreatedEvent)]
     public class OrderCreatedEvent : BaseEvent
     {
         public OrderCreatedEvent()

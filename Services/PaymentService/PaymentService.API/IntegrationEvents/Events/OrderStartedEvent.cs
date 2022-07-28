@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PaymentService.API.IntegrationEvents.Events
 {
-    [Event(EventNames.OrderStartedEvent)]
+    [Event(EventNames.Order.OrderStartedEvent)]
     public class OrderStartedEvent : BaseEvent
     {
         public OrderStartedEvent(Guid userId, Guid orderId)

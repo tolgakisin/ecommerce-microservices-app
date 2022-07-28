@@ -5,7 +5,7 @@ using System;
 
 namespace NotificationService.ConsoleApp.IntegrationEvents.Events
 {
-    [Event(EventNames.PaymentFailedEvent)]
+    [Event(EventNames.Payment.PaymentFailedEvent)]
     public class PaymentFailedEvent : BaseEvent
     {
         public Guid UserId { get; set; }

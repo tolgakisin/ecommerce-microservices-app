@@ -11,12 +11,22 @@ namespace EventBus.Core
         public const string Event5 = "Event5";
         public const string Event6 = "Event6";
 
-        public const string OrchestratorGeneralEvent = "orchestrator-general-event";
+        public class Orchestrator
+        {
+            public const string OrchestratorGeneralEvent = "orchestrator-general-event";
+        }
 
-        public const string OrderCreatedEvent = "OrderCreatedEvent";
-        public const string OrderStartedEvent = "OrderStartedEvent";
+        public class Order
+        {
+            public const string OrderCreatedEvent = "OrderCreatedEvent";
+            public const string OrderStartedEvent = "OrderStartedEvent";
+            public const string OrderFinishedEvent = "OrderFinishedEvent";
+        }
 
-        public const string PaymentSuccessEvent = "PaymentSuccessEvent";
-        public const string PaymentFailedEvent = "PaymentFailedEvent";
+        public class Payment
+        {
+            public const string PaymentSuccessEvent = "PaymentSuccessEvent";
+            public const string PaymentFailedEvent = "PaymentFailedEvent";
+        }
     }
 }

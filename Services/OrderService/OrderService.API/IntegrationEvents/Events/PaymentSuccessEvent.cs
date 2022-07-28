@@ -5,7 +5,7 @@ using System;
 
 namespace OrderService.API.IntegrationEvents.Events
 {
-    [Event(EventNames.PaymentSuccessEvent)]
+    [Event(EventNames.Payment.PaymentSuccessEvent)]
     public class PaymentSuccessEvent : BaseEvent
     {
         public Guid UserId { get; set; }

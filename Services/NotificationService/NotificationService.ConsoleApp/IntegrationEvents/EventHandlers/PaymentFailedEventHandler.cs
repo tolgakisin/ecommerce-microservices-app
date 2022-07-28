@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NotificationService.ConsoleApp.IntegrationEvents.EventHandlers
 {
-    [Event(EventNames.PaymentFailedEvent)]
+    [Event(EventNames.Payment.PaymentFailedEvent)]
     public class PaymentFailedEventHandler : IEventHandler<PaymentFailedEvent>
     {
         public Task Handle(PaymentFailedEvent @event)
