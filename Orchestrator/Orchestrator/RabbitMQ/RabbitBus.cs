@@ -45,10 +45,10 @@ namespace Orchestrator.RabbitMQ
 
                 var props = _channel.CreateBasicProperties();
 
-                ReceiveMessage(props, sagaMessage.IsSync, app);
+                ReceiveMessage(props, sagaMessage.EventSync, app);
                 PublishMessage(messageObj, sagaMessage, props);
 
-                if (!sagaMessage.IsSync) return null;
+                if (!sagaMessage.EventSync) return null;
 
                 var isTaken = _respQueue.TryTake(out var responseMessage, TimeSpan.FromSeconds(200));
 
@@ -78,21 +78,21 @@ namespace Orchestrator.RabbitMQ
 
                     string nextEventName = string.Empty;
                     int nextEventId = 0;
-                    if (sagaMessage.IsFailed)
+                    if (sagaMessage.EventFailed)
                     {
                         _context.Save<EventLog>(new EventLog
                         {
                             EventId = sagaMessage.EventId,
                             Data = bodyJson,
                             ExecutionDate = DateTime.Now,
-                            State = !sagaMessage.IsReverseStarted ? EventState.Failed : !sagaMessage.IsFinished ? EventState.ReverseStarted : EventState.ReverseFinished,
-                            ErrorMessage = sagaMessage.ErrorMessage
+                            State = !sagaMessage.EventReverseStarted ? EventState.Failed : !sagaMessage.EventFinished ? EventState.ReverseStarted : EventState.ReverseFinished,
+                            ErrorMessage = sagaMessage.EventErrorMessage
                         });
 
-                        if (!sagaMessage.IsReverseStarted)
+                        if (!sagaMessage.EventReverseStarted)
                         {
-                            sagaMessage.IsReverseStarted = true;
-                            objMessage[nameof(sagaMessage.IsReverseStarted)] = true;
+                            sagaMessage.EventReverseStarted = true;
+                            objMessage[nameof(sagaMessage.EventReverseStarted)] = true;
                         }
 
                         var previousEvent = _context.GetPreviousEvent(sagaMessage.EventName);
@@ -126,10 +126,10 @@ namespace Orchestrator.RabbitMQ
                         _context.Save<EventLog>(new EventLog
                         {
                             EventId = sagaMessage.EventId,
-                            Data = bodyJson,
+                            Data = JsonConvert.SerializeObject(objMessage),
                             ExecutionDate = DateTime.Now,
-                            State = sagaMessage.IsFailed ? !sagaMessage.IsFinished ? EventState.ReverseStarted : EventState.ReverseFinished : EventState.Started,
-                            ErrorMessage = sagaMessage.ErrorMessage
+                            State = sagaMessage.EventFailed ? !sagaMessage.EventFinished ? EventState.ReverseStarted : EventState.ReverseFinished : EventState.Started,
+                            ErrorMessage = sagaMessage.EventErrorMessage
                         });
                     }
                     else

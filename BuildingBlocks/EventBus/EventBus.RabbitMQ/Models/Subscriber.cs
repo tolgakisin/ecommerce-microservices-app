@@ -50,27 +50,27 @@ namespace EventBus.RabbitMQ.Models
                     {
                         var handler = serviceProvider.ServiceProvider.GetService(typeof(IEventHandler<TEvent>));
 
-                        if (message.IsFailed)
+                        if (message.EventFailed)
                         {
                             var concreteType = typeof(IEventHandler<>).MakeGenericType(typeof(TEvent));
                             await (Task)concreteType.GetMethod("HandleReverse").Invoke(handler, new object[] { message });
 
-                            message.IsFinished = true;
+                            message.EventFinished = true;
                         }
                         else
                         {
                             var concreteType = typeof(IEventHandler<>).MakeGenericType(typeof(TEvent));
                             await (Task)concreteType.GetMethod("Handle").Invoke(handler, new object[] { message });
 
-                            message.IsFinished = true;
+                            message.EventFinished = true;
                         }
                     }
                     catch (Exception ex)
                     {
                         message = messageDataBackup;
-                        message.IsFinished = false;
-                        message.IsFailed = true;
-                        message.ErrorMessage = ex.InnerException.Message;
+                        message.EventFinished = false;
+                        message.EventFailed = true;
+                        message.EventErrorMessage = ex.InnerException.Message;
                     }
                     finally
                     {

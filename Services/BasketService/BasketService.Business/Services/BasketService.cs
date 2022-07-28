@@ -79,7 +79,7 @@ namespace BasketService.Business.Services
             {
                 Name = "Tolga",
                 Surname = "TestSurname",
-                IsSync = true
+                //EventSync = true
             };
 
             var result = _eventManager.Publish(event1);

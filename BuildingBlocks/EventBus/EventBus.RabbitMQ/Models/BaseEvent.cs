@@ -3,11 +3,11 @@
     public class BaseEvent : IEvent
     {
         public string EventName { get; set; }
-        public bool IsFinished { get; set; }
-        public bool IsSync { get; set; }
+        public bool EventFinished { get; set; }
+        public bool EventSync { get; set; }
         public int EventId { get; set; }
-        public bool IsFailed { get; set; }
-        public string ErrorMessage { get; set; }
-        public bool IsReverseStarted { get; set; }
+        public bool EventFailed { get; set; }
+        public string EventErrorMessage { get; set; }
+        public bool EventReverseStarted { get; set; }
     }
 }

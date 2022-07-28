@@ -9,7 +9,7 @@ namespace BasketService.Business.IntegrationEvents.Events.EventTest
         public Task Handle(Event2 @event)
         {
             @event.Surname += "Event2 Handle.";
-            throw new Exception("An error occured. Event2");
+            //throw new Exception("An error occured. Event2");
 
             return Task.CompletedTask;
         }

@@ -59,7 +59,7 @@ namespace Orchestrator.RabbitMQ.Extensions
                                 ErrorMessage = $"{sagaMessage.EventName} is not found."
                             });
 
-                            if (sagaMessage.IsSync)
+                            if (sagaMessage.EventSync)
                                 SyncPublish(channel, ea.BasicProperties, null);
 
                             rabbitBus.CloseChannel();
@@ -70,17 +70,18 @@ namespace Orchestrator.RabbitMQ.Extensions
                         objMessage[nameof(sagaMessage.EventId)] = @event.Id;
                         sagaMessage.EventId = @event.Id;
 
+
                         context.Save<EventLog>(new EventLog
                         {
                             EventId = sagaMessage.EventId,
-                            Data = bodyJson,
+                            Data = JsonConvert.SerializeObject(objMessage),
                             ExecutionDate = DateTime.Now,
                             State = Common.Enums.EventState.Started
                         });
 
                         var response = await rabbitBus.SendMessageAsync(objMessage, sagaMessage, app);
 
-                        if (sagaMessage.IsSync)
+                        if (sagaMessage.EventSync)
                             SyncPublish(channel, ea.BasicProperties, response);
                     }
                     catch (Exception ex)

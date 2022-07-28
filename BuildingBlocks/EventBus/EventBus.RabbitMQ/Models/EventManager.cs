@@ -58,7 +58,7 @@ namespace EventBus.RabbitMQ.Models
                 string exchangeName = "orchestrator-exchange";
 
                 var props = _channel.CreateBasicProperties();
-                if (@event.IsSync)
+                if (@event.EventSync)
                 {
                     var replyQueueName = _channel.QueueDeclare().QueueName;
                     var correlationId = Guid.NewGuid().ToString();
@@ -97,7 +97,7 @@ namespace EventBus.RabbitMQ.Models
                                     basicProperties: props,
                                     body: body);
 
-                if (@event.IsSync)
+                if (@event.EventSync)
                 {
                     var isTaken = _respQueue.TryTake(out var response, TimeSpan.FromSeconds(200));
 
