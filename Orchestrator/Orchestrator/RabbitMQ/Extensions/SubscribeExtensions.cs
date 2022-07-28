@@ -53,7 +53,7 @@ namespace Orchestrator.RabbitMQ.Extensions
                             context.Save<EventLog>(new EventLog
                             {
                                 EventId = sagaMessage.EventId,
-                                Data = sagaMessage.Data,
+                                Data = bodyJson,
                                 ExecutionDate = DateTime.Now,
                                 State = Common.Enums.EventState.NotFound,
                                 ErrorMessage = $"{sagaMessage.EventName} is not found."
@@ -73,7 +73,7 @@ namespace Orchestrator.RabbitMQ.Extensions
                         context.Save<EventLog>(new EventLog
                         {
                             EventId = sagaMessage.EventId,
-                            Data = sagaMessage.Data,
+                            Data = bodyJson,
                             ExecutionDate = DateTime.Now,
                             State = Common.Enums.EventState.Started
                         });
@@ -88,7 +88,7 @@ namespace Orchestrator.RabbitMQ.Extensions
                         context.Save<EventLog>(new EventLog
                         {
                             EventId = sagaMessage.EventId,
-                            Data = sagaMessage.Data,
+                            Data = bodyJson,
                             ExecutionDate = DateTime.Now,
                             State = Common.Enums.EventState.Error,
                             ErrorMessage = ex.Message

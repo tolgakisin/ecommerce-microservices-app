@@ -42,7 +42,7 @@ namespace EventBus.RabbitMQ.Models
 
                 var bodyJson = System.Text.Encoding.UTF8.GetString(ea.Body.Span);
                 var message = JsonConvert.DeserializeObject<TEvent>(bodyJson);
-                var messageDataBackup = message.Data;
+                var messageDataBackup = JsonConvert.DeserializeObject<TEvent>(bodyJson);
 
                 using (var serviceProvider = _serviceProvider.CreateScope())
                 {
@@ -67,7 +67,7 @@ namespace EventBus.RabbitMQ.Models
                     }
                     catch (Exception ex)
                     {
-                        message.Data = messageDataBackup;
+                        message = messageDataBackup;
                         message.IsFinished = false;
                         message.IsFailed = true;
                         message.ErrorMessage = ex.InnerException.Message;

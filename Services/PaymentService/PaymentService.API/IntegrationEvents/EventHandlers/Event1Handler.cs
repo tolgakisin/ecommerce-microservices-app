@@ -8,14 +8,14 @@ namespace PaymentService.API.IntegrationEvents.Events
     {
         public Task Handle(Event1 @event)
         {
-            @event.Data += "Event1 is started.";
+            @event.Name += "Event1 Handle.";
 
             return Task.CompletedTask;
         }
 
         public Task HandleReverse(Event1 @event)
         {
-            @event.Data += "Event1 is reversed.";
+            @event.Name += "Event1 Reverse.";
 
             return Task.CompletedTask;
         }

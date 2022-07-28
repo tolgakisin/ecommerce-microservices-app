@@ -77,7 +77,6 @@ namespace BasketService.Business.Services
         {
             Event1 event1 = new Event1()
             {
-                Data = "Event1",
                 Name = "Tolga",
                 Surname = "TestSurname",
                 IsSync = true

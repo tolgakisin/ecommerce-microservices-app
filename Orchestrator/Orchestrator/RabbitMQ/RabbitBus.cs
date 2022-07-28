@@ -83,7 +83,7 @@ namespace Orchestrator.RabbitMQ
                         _context.Save<EventLog>(new EventLog
                         {
                             EventId = sagaMessage.EventId,
-                            Data = sagaMessage.Data,
+                            Data = bodyJson,
                             ExecutionDate = DateTime.Now,
                             State = !sagaMessage.IsReverseStarted ? EventState.Failed : !sagaMessage.IsFinished ? EventState.ReverseStarted : EventState.ReverseFinished,
                             ErrorMessage = sagaMessage.ErrorMessage
@@ -104,7 +104,7 @@ namespace Orchestrator.RabbitMQ
                         _context.Save<EventLog>(new EventLog
                         {
                             EventId = sagaMessage.EventId,
-                            Data = sagaMessage.Data,
+                            Data = bodyJson,
                             ExecutionDate = DateTime.Now,
                             State = EventState.Finished
                         });
@@ -126,7 +126,7 @@ namespace Orchestrator.RabbitMQ
                         _context.Save<EventLog>(new EventLog
                         {
                             EventId = sagaMessage.EventId,
-                            Data = sagaMessage.Data,
+                            Data = bodyJson,
                             ExecutionDate = DateTime.Now,
                             State = sagaMessage.IsFailed ? !sagaMessage.IsFinished ? EventState.ReverseStarted : EventState.ReverseFinished : EventState.Started,
                             ErrorMessage = sagaMessage.ErrorMessage

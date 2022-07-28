@@ -8,15 +8,15 @@ namespace BasketService.Business.IntegrationEvents.Events.EventTest
     {
         public Task Handle(Event2 @event)
         {
-            @event.Data += "Event2 is started.";
-            //throw new Exception("An error occured.");
+            @event.Surname += "Event2 Handle.";
+            throw new Exception("An error occured. Event2");
 
             return Task.CompletedTask;
         }
 
         public Task HandleReverse(Event2 @event)
         {
-            @event.Data += "Event2 reverse is started.";
+            @event.Surname += "Event2 Reverse.";
 
             return Task.CompletedTask;
         }

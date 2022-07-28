@@ -10,13 +10,14 @@ namespace BasketService.Business.IntegrationEvents.EventHandlers
         public Task Handle(Event1 @event)
         {
             var data = @event;
+            @event.Name += "Event1 Handle.";
 
             return Task.CompletedTask;
         }
 
         public Task HandleReverse(Event1 @event)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }
