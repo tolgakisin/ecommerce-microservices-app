@@ -85,7 +85,7 @@ namespace EventBus.RabbitMQ.Models
                                     exclusive: false,
                                     autoDelete: false);
 
-                _channel.ExchangeDeclare(exchangeName, "direct", false, false);
+                _channel.ExchangeDeclare(exchangeName, ExchangeType.Direct, false, false);
                 _channel.QueueBind(queue: eventName, exchangeName, eventName);
 
                 var serializedMessage = JsonConvert.SerializeObject(@event);

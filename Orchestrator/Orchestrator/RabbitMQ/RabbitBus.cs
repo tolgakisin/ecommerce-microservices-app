@@ -155,7 +155,7 @@ namespace Orchestrator.RabbitMQ
                      autoDelete: false,
                      arguments: null);
 
-            _channel.ExchangeDeclare(exchangeName, "direct", false, false);
+            _channel.ExchangeDeclare(exchangeName, ExchangeType.Direct, false, false);
             _channel.QueueBind(queue: sagaMessage.EventName, exchangeName, sagaMessage.EventName);
 
             var serializedMessage = JsonConvert.SerializeObject(objMessage);
