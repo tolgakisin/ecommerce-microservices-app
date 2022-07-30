@@ -20,13 +20,6 @@ namespace Orchestrator.Data.Common
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<EventProcess>().HasData(
-                new EventProcess { Id = 1, Name = "Event1", PreviousId = null },
-                new EventProcess { Id = 2, Name = "Event2", PreviousId = 1 },
-                new EventProcess { Id = 3, Name = "Event3", PreviousId = null },
-                new EventProcess { Id = 4, Name = "Event4", PreviousId = 3 },
-                new EventProcess { Id = 5, Name = "Event5", PreviousId = 4 },
-                new EventProcess { Id = 6, Name = "Event6", PreviousId = null },
-
                 new EventProcess { Id = 7, Name = EventNames.Order.OrderCreatedEvent, PreviousId = null },
                 new EventProcess { Id = 8, Name = EventNames.Order.OrderStartedEvent, PreviousId = null },
                 new EventProcess { Id = 9, Name = EventNames.Order.OrderSubmittedEvent, PreviousId = null },

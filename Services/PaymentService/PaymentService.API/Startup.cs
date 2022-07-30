@@ -2,19 +2,12 @@ using EventBus.RabbitMQ.Models;
 using EventBus.RabbitMQ.RabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using PaymentService.API.IntegrationEvents.EventHandlers;
 using PaymentService.API.IntegrationEvents.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PaymentService.API
 {
@@ -39,7 +32,6 @@ namespace PaymentService.API
             services.AddSingleton<IRabbitMQBase, RabbitMQBase>();
             services.AddSingleton<IEventManager, EventManager>();
 
-            services.AddScoped<IEventHandler<Event1>, Event1Handler>();
             services.AddScoped<IEventHandler<OrderCreatedEvent>, OrderCreatedEventHandler>();
         }
 
@@ -64,7 +56,6 @@ namespace PaymentService.API
                 endpoints.MapControllers();
             });
 
-            //eventManager.Subscribe<Event1, Event1Handler>();
             eventManager.Subscribe<OrderCreatedEvent, OrderCreatedEventHandler>();
         }
     }

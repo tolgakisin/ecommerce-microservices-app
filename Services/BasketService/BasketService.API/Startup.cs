@@ -2,7 +2,6 @@ using BasketService.API.Extensions;
 using BasketService.Business.Contracts.Services;
 using BasketService.Business.IntegrationEvents.EventHandlers;
 using BasketService.Business.IntegrationEvents.Events;
-using BasketService.Business.IntegrationEvents.Events.EventTest;
 using BasketService.Data.Contracts.Repositories.Basket;
 using BasketService.Data.Repositories.Basket;
 using EventBus.RabbitMQ.Models;
@@ -62,8 +61,6 @@ namespace BasketService.API
             // Subscribe all events.
             //app.UseEventSubscribing();
 
-            eventManager.Subscribe<Event1, Event1Handler>();
-            eventManager.Subscribe<Event2, Event2Handler>();
             eventManager.Subscribe<OrderCreatedEvent, OrderCreatedEventHandler>();
         }
 
@@ -83,8 +80,6 @@ namespace BasketService.API
             // Register all EventHandlers.
             //services.AddEventHandlers();
 
-            services.AddScoped<IEventHandler<Event1>, Event1Handler>();
-            services.AddScoped<IEventHandler<Event2>, Event2Handler>();
             services.AddScoped<IEventHandler<OrderCreatedEvent>, OrderCreatedEventHandler>();
         }
     }

@@ -1,11 +1,9 @@
 ﻿using BasketService.Business.Contracts.Services;
 using BasketService.Business.IntegrationEvents.Events;
-using BasketService.Business.IntegrationEvents.Events.EventTest;
 using BasketService.Common.Utils;
 using BasketService.Data.Contracts.Entities.Basket;
 using BasketService.Data.Contracts.FakeEntities;
 using BasketService.Data.Contracts.Repositories.Basket;
-using EventBus.Core;
 using EventBus.RabbitMQ.Models;
 using System;
 using System.Linq;
@@ -75,14 +73,14 @@ namespace BasketService.Business.Services
 
         public Task TestEventBusAndOrchestration()
         {
-            Event1 event1 = new Event1()
-            {
-                Name = "Tolga",
-                Surname = "TestSurname",
-                //EventSync = true
-            };
+            //Event1 event1 = new Event1()
+            //{
+            //    Name = "Tolga",
+            //    Surname = "TestSurname",
+            //    //EventSync = true
+            //};
 
-            var result = _eventManager.Publish(event1);
+            //var result = _eventManager.Publish(event1);
 
             return Task.CompletedTask;
         }
