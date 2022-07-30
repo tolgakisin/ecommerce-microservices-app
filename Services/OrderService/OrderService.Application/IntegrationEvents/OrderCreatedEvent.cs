@@ -3,9 +3,9 @@ using EventBus.RabbitMQ.Models;
 using EventBus.RabbitMQ.Utils;
 using System;
 
-namespace OrderService.API.IntegrationEvents.Events
+namespace OrderService.Application.IntegrationEvents
 {
-    [Event(EventNames.Order.OrderStartedEvent)]
+    [Event(EventNames.Order.OrderCreatedEvent)]
     public class OrderCreatedEvent : BaseEvent
     {
         public OrderCreatedEvent(Guid userId, Guid orderId)

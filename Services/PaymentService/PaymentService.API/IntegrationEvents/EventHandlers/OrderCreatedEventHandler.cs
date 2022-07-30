@@ -1,24 +1,20 @@
-﻿using EventBus.Core;
-using EventBus.RabbitMQ.Models;
-using EventBus.RabbitMQ.Utils;
+﻿using EventBus.RabbitMQ.Models;
 using PaymentService.API.IntegrationEvents.Events;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace PaymentService.API.IntegrationEvents.EventHandlers
 {
-    public class OrderStartedEventHandler : IEventHandler<OrderStartedEvent>
+    public class OrderCreatedEventHandler : IEventHandler<OrderCreatedEvent>
     {
         private readonly IEventManager _eventManager;
 
-        public OrderStartedEventHandler(IEventManager eventManager)
+        public OrderCreatedEventHandler(IEventManager eventManager)
         {
             _eventManager = eventManager;
         }
 
-        public Task Handle(OrderStartedEvent @event)
+        public Task Handle(OrderCreatedEvent @event)
         {
             // Check Payment process
             bool paymentSuccess = true;
@@ -33,7 +29,7 @@ namespace PaymentService.API.IntegrationEvents.EventHandlers
             return Task.CompletedTask;
         }
 
-        public Task HandleReverse(OrderStartedEvent @event)
+        public Task HandleReverse(OrderCreatedEvent @event)
         {
             throw new NotImplementedException();
         }

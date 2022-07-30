@@ -62,7 +62,7 @@ namespace OrderService.API
             });
 
             eventManager.Subscribe<PaymentSuccessEvent, PaymentSuccessEventHandler>();
-            eventManager.Subscribe<OrderCreatedEvent, OrderCreatedEventHandler>();
+            eventManager.Subscribe<OrderStartedEvent, OrderStartedEventHandler>();
         }
 
         private void ConfigureExtensions(IServiceCollection services)
@@ -73,7 +73,7 @@ namespace OrderService.API
             services.AddSingleton<IRabbitMQBase, RabbitMQBase>();
             services.AddSingleton<IEventManager, EventManager>();
 
-            services.AddScoped<IEventHandler<OrderCreatedEvent>, OrderCreatedEventHandler>();
+            services.AddScoped<IEventHandler<OrderStartedEvent>, OrderStartedEventHandler>();
             services.AddScoped<IEventHandler<PaymentSuccessEvent>, PaymentSuccessEventHandler>();
         }
     }

@@ -1,5 +1,4 @@
 ﻿using EventBus.RabbitMQ.Models;
-using System;
 using System.Threading.Tasks;
 
 namespace PaymentService.API.IntegrationEvents.Events

@@ -68,7 +68,7 @@ namespace BasketService.Business.Services
             if (customerBasket == null || !customerBasket.BasketItems.Any())
                 ErrorManagement.ThrowError("Basket couldn't be sent.");
 
-            _eventManager.Publish(new OrderCreatedEvent(Guid.Parse(buyerId), customerBasket, customerAddress, customerPayment));
+            _eventManager.Publish(new OrderStartedEvent(Guid.Parse(buyerId), customerBasket, customerAddress, customerPayment));
 
             return customerBasket;
         }

@@ -6,27 +6,23 @@ using System.Threading.Tasks;
 
 namespace OrderService.API.IntegrationEvents.EventHandlers
 {
-    public class OrderCreatedEventHandler : IEventHandler<OrderCreatedEvent>
+    public class OrderStartedEventHandler : IEventHandler<OrderStartedEvent>
     {
         private readonly IEventManager _eventManager;
 
-        public OrderCreatedEventHandler(IEventManager eventManager)
+        public OrderStartedEventHandler(IEventManager eventManager)
         {
             _eventManager = eventManager;
         }
 
-        public Task Handle(OrderCreatedEvent @event)
+        public Task Handle(OrderStartedEvent @event)
         {
             // TODO: Create Order
-
-            Guid orderId = Guid.NewGuid();
-
-            _eventManager.Publish(new OrderStartedEvent(@event.UserId, orderId));
 
             return Task.CompletedTask;
         }
 
-        public Task HandleReverse(OrderCreatedEvent @event)
+        public Task HandleReverse(OrderStartedEvent @event)
         {
             throw new NotImplementedException();
         }

@@ -3,9 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Orchestrator.Data.Entities;
 using Orchestrator.Data.Entities.Base;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Orchestrator.Data.Common
 {
@@ -31,7 +29,7 @@ namespace Orchestrator.Data.Common
 
                 new EventProcess { Id = 7, Name = EventNames.Order.OrderCreatedEvent, PreviousId = null },
                 new EventProcess { Id = 8, Name = EventNames.Order.OrderStartedEvent, PreviousId = null },
-                new EventProcess { Id = 9, Name = EventNames.Order.OrderFinishedEvent, PreviousId = null },
+                new EventProcess { Id = 9, Name = EventNames.Order.OrderSubmittedEvent, PreviousId = null },
                 new EventProcess { Id = 10, Name = EventNames.Payment.PaymentSuccessEvent, PreviousId = null },
                 new EventProcess { Id = 11, Name = EventNames.Payment.PaymentFailedEvent, PreviousId = null }
             );

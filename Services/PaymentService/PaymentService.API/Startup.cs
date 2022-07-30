@@ -40,7 +40,7 @@ namespace PaymentService.API
             services.AddSingleton<IEventManager, EventManager>();
 
             services.AddScoped<IEventHandler<Event1>, Event1Handler>();
-            services.AddScoped<IEventHandler<OrderStartedEvent>, OrderStartedEventHandler>();
+            services.AddScoped<IEventHandler<OrderCreatedEvent>, OrderCreatedEventHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,7 +65,7 @@ namespace PaymentService.API
             });
 
             //eventManager.Subscribe<Event1, Event1Handler>();
-            eventManager.Subscribe<OrderStartedEvent, OrderStartedEventHandler>();
+            eventManager.Subscribe<OrderCreatedEvent, OrderCreatedEventHandler>();
         }
     }
 }

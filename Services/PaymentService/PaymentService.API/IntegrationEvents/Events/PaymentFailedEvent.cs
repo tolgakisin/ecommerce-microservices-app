@@ -1,7 +1,6 @@
 ﻿using EventBus.Core;
 using EventBus.RabbitMQ.Models;
 using EventBus.RabbitMQ.Utils;
-using PaymentService.API.EventModels;
 using System;
 
 namespace PaymentService.API.IntegrationEvents.Events

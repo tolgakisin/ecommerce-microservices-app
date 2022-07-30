@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 
 namespace NotificationService.ConsoleApp.IntegrationEvents.EventHandlers
 {
-    public class PaymentSuccessEventHandler : IEventHandler<PaymentSuccessEvent>
+    public class OrderSubmittedEventHandler : IEventHandler<OrderSubmittedEvent>
     {
-        public Task Handle(PaymentSuccessEvent @event)
+        public Task Handle(OrderSubmittedEvent @event)
         {
-            Console.WriteLine($"Payment Success. UserId:{@event.UserId} OrderId:{@event.OrderId}");
+            Console.WriteLine($"Order Submitted. UserId:{@event.UserId} OrderId:{@event.OrderId}");
 
             return Task.CompletedTask;
         }
 
-        public Task HandleReverse(PaymentSuccessEvent @event)
+        public Task HandleReverse(OrderSubmittedEvent @event)
         {
             throw new NotImplementedException();
         }

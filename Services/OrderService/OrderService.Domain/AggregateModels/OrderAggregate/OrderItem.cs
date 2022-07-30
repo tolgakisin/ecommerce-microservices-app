@@ -5,7 +5,7 @@ namespace OrderService.Domain.AggregateModels.OrderAggregate
 {
     public class OrderItem : BaseEntity
     {
-        public OrderItem(int productId, string productName, decimal unitPrice, int quantity)
+        public OrderItem(Guid productId, string productName, decimal unitPrice, int quantity)
         {
             ProductId = productId;
             ProductName = productName;
@@ -24,11 +24,9 @@ namespace OrderService.Domain.AggregateModels.OrderAggregate
 
         }
 
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
         public string ProductName { get; set; }
         public decimal UnitPrice { get; set; }
         public int Quantity { get; set; }
-
-
     }
 }

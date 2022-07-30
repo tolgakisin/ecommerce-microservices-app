@@ -8,6 +8,12 @@ namespace OrderService.API.IntegrationEvents.Events
     [Event(EventNames.Payment.PaymentSuccessEvent)]
     public class PaymentSuccessEvent : BaseEvent
     {
+        public PaymentSuccessEvent(Guid userId, Guid orderId)
+        {
+            UserId = userId;
+            OrderId = orderId;
+        }
+
         public Guid UserId { get; set; }
         public Guid OrderId { get; set; }
     }

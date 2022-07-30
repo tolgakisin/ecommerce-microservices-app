@@ -2,9 +2,6 @@
 using OrderService.Domain.Common;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OrderService.Domain.AggregateModels.OrderAggregate
 {
@@ -36,7 +33,7 @@ namespace OrderService.Domain.AggregateModels.OrderAggregate
             Payment = payment;
         }
 
-        public void AddOrderItem(int productId, string productName, decimal unitPrice, int quantity)
+        public void AddOrderItem(Guid productId, string productName, decimal unitPrice, int quantity)
         {
             // OrderItem Validations
 
@@ -51,6 +48,11 @@ namespace OrderService.Domain.AggregateModels.OrderAggregate
         public void SetPaymentId(Guid paymentId)
         {
             PaymentId = paymentId;
+        }
+
+        public void SetStatus(OrderStatus orderStatus)
+        {
+            OrderStatus = orderStatus;
         }
     }
 }

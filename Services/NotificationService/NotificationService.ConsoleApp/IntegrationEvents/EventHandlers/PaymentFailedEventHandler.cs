@@ -1,13 +1,10 @@
-﻿using EventBus.Core;
-using EventBus.RabbitMQ.Models;
-using EventBus.RabbitMQ.Utils;
+﻿using EventBus.RabbitMQ.Models;
 using NotificationService.ConsoleApp.IntegrationEvents.Events;
 using System;
 using System.Threading.Tasks;
 
 namespace NotificationService.ConsoleApp.IntegrationEvents.EventHandlers
 {
-    [Event(EventNames.Payment.PaymentFailedEvent)]
     public class PaymentFailedEventHandler : IEventHandler<PaymentFailedEvent>
     {
         public Task Handle(PaymentFailedEvent @event)

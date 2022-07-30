@@ -1,12 +1,13 @@
-﻿using EventBus.Core;
+﻿using BasketService.Data.Contracts.Entities.Basket;
+using BasketService.Data.Contracts.FakeEntities;
+using EventBus.Core;
 using EventBus.RabbitMQ.Models;
 using EventBus.RabbitMQ.Utils;
-using OrderService.API.EventModels;
 using System;
 
-namespace OrderService.API.IntegrationEvents.Events
+namespace BasketService.Business.IntegrationEvents.Events
 {
-    [Event(EventNames.Order.OrderCreatedEvent)]
+    [Event(EventNames.Order.OrderStartedEvent)]
     public class OrderStartedEvent : BaseEvent
     {
         public OrderStartedEvent(Guid userId, CustomerBasket customerBasket, CustomerAddress customerAddress, CustomerPayment customerPayment)

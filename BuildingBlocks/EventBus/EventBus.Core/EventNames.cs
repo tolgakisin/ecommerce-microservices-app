@@ -20,7 +20,7 @@ namespace EventBus.Core
         {
             public const string OrderCreatedEvent = "OrderCreatedEvent";
             public const string OrderStartedEvent = "OrderStartedEvent";
-            public const string OrderFinishedEvent = "OrderFinishedEvent";
+            public const string OrderSubmittedEvent = "OrderSubmittedEvent";
         }
 
         public class Payment
