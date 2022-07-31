@@ -1,13 +1,9 @@
 ﻿using EventBus.RabbitMQ.Models;
 using MediatR;
-using OrderService.Application.IntegrationEvents;
+using OrderService.Application.IntegrationEvents.Events;
 using OrderService.Application.Interfaces.Repositories;
 using OrderService.Domain.AggregateModels.BuyerAggregate;
 using OrderService.Domain.AggregateModels.OrderAggregate;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,8 +22,8 @@ namespace OrderService.Application.Features.Commands.CreateOrder
 
         public async Task<bool> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            var address = new Address(request.OrderAddress.City, request.OrderAddress.Street, request.OrderAddress.State, request.OrderAddress.Country, request.OrderAddress.ZipCode);
-            var payment = new Payment(request.OrderPayment.CardNumber, request.OrderPayment.CardHolderName, request.OrderPayment.ExpirationDate, request.OrderPayment.CardSecurityNumber, request.OrderPayment.CardTypeId);
+            var address = new Address(request.OrderAddress.City, request.OrderAddress.Street, request.OrderAddress.State, request.OrderAddress.Country, request.OrderAddress.ZipCode, request.BuyerId);
+            var payment = new Payment(request.OrderPayment.CardNumber, request.OrderPayment.CardHolderName, request.OrderPayment.ExpirationDate, request.OrderPayment.CardSecurityNumber, request.OrderPayment.CardTypeId, request.BuyerId);
 
             var order = new Order(request.BuyerId, address, payment);
             foreach (var item in request.OrderItems)

@@ -3,12 +3,12 @@ using EventBus.RabbitMQ.Models;
 using EventBus.RabbitMQ.Utils;
 using System;
 
-namespace OrderService.Application.IntegrationEvents
+namespace OrderService.Application.IntegrationEvents.Events
 {
-    [Event(EventNames.Order.OrderCreatedEvent)]
-    public class OrderCreatedEvent : BaseEvent
+    [Event(EventNames.Order.OrderSubmittedEvent)]
+    public class OrderSubmittedEvent : BaseEvent
     {
-        public OrderCreatedEvent(Guid userId, Guid orderId)
+        public OrderSubmittedEvent(Guid userId, Guid orderId)
         {
             UserId = userId;
             OrderId = orderId;

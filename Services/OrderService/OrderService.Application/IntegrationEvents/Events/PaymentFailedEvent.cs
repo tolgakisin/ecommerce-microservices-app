@@ -3,9 +3,9 @@ using EventBus.RabbitMQ.Models;
 using EventBus.RabbitMQ.Utils;
 using System;
 
-namespace OrderService.Application.IntegrationEvents
+namespace OrderService.Application.IntegrationEvents.Events
 {
-    [Event(EventNames.Payment.PaymentSuccessEvent)]
+    [Event(EventNames.Payment.PaymentFailedEvent)]
     public class PaymentFailedEvent : BaseEvent
     {
         public Guid OrderId { get; set; }

@@ -10,9 +10,9 @@ namespace OrderService.Domain.AggregateModels.OrderAggregate
         public DateTime OrderDate { get; private set; }
         public string Description { get; private set; }
         public Guid BuyerId { get; private set; }
+        public Buyer Buyer { get; set; }
         public Address Address { get; private set; }
-        private int orderStatusId { get; set; }
-        public OrderStatus OrderStatus { get; private set; }
+        public int OrderStatus { get; private set; }
         private readonly List<OrderItem> _orderItems;
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
         public Guid PaymentId { get; private set; }
@@ -37,7 +37,7 @@ namespace OrderService.Domain.AggregateModels.OrderAggregate
         {
             // OrderItem Validations
 
-            _orderItems.Add(new OrderItem(productId, productName, unitPrice, quantity));
+            _orderItems.Add(new OrderItem(productId, productName, unitPrice, quantity, Id));
         }
 
         public void SetBuyerId(Guid buyerId)
@@ -52,7 +52,7 @@ namespace OrderService.Domain.AggregateModels.OrderAggregate
 
         public void SetStatus(OrderStatus orderStatus)
         {
-            OrderStatus = orderStatus;
+            OrderStatus = orderStatus.Id;
         }
     }
 }

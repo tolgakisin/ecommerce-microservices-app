@@ -2,20 +2,13 @@ using EventBus.RabbitMQ.Models;
 using EventBus.RabbitMQ.RabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using OrderService.API.Extensions;
-using OrderService.API.IntegrationEvents.EventHandlers;
-using OrderService.API.IntegrationEvents.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using OrderService.Application.IntegrationEvents.EventHandlers;
+using OrderService.Application.IntegrationEvents.Events;
 
 namespace OrderService.API
 {
@@ -62,11 +55,14 @@ namespace OrderService.API
             });
 
             eventManager.Subscribe<PaymentSuccessEvent, PaymentSuccessEventHandler>();
+            eventManager.Subscribe<PaymentFailedEvent, PaymentFailedEventHandler>();
             eventManager.Subscribe<OrderStartedEvent, OrderStartedEventHandler>();
+            eventManager.Subscribe<OrderSubmittedEvent, OrderSubmittedEventHandler>();
         }
 
         private void ConfigureExtensions(IServiceCollection services)
         {
+            //Auth
             services.ConfigureAuth(Configuration);
 
             // RabbitMQ

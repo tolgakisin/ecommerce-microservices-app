@@ -26,7 +26,7 @@ namespace OrderService.Domain.AggregateModels.BuyerAggregate
                 return existPayment;
             }
 
-            var payment = new Payment(cardNumber, cardHolderName, expirationDate, cardSecurityNumber, cardTypeId);
+            var payment = new Payment(cardNumber, cardHolderName, expirationDate, cardSecurityNumber, cardTypeId, BuyerId);
             _payments.Add(payment);
 
             return payment;

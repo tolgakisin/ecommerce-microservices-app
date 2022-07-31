@@ -9,13 +9,14 @@ namespace OrderService.Domain.AggregateModels.BuyerAggregate
 {
     public class Payment : BaseEntity
     {
-        public Payment(string cardNumber, string cardHolderName, DateTime expirationDate, string cardSecurityNumber, int cardTypeId)
+        public Payment(string cardNumber, string cardHolderName, DateTime expirationDate, string cardSecurityNumber, int cardTypeId, Guid buyerId)
         {
             CardNumber = cardNumber;
             CardHolderName = cardHolderName;
             ExpirationDate = expirationDate;
             CardSecurityNumber = cardSecurityNumber;
             CardTypeId = cardTypeId;
+            BuyerId = buyerId;
 
             if (string.IsNullOrWhiteSpace(cardNumber)) throw new Exception("Card Number is empty.");
             if (string.IsNullOrWhiteSpace(cardHolderName)) throw new Exception("Card Holder Name is empty.");
@@ -31,5 +32,7 @@ namespace OrderService.Domain.AggregateModels.BuyerAggregate
         public string CardSecurityNumber { get; set; }
         public int CardTypeId { get; set; }
         public CardType CardType { get; private set; }
+
+        public Guid BuyerId { get; set; }
     }
 }

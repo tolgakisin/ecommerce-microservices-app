@@ -9,7 +9,7 @@ namespace OrderService.Application.Interfaces.Repositories
 {
     public interface IGenericRepository<T> : IRepository<T> where T : BaseEntity
     {
-        Task<T> GetAllAsync();
+        IEnumerable<T> GetAll();
         Task<T> GetByIdAsync(Guid id);
         Task<T> SaveAsync(T t);
     }
