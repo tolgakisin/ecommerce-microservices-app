@@ -11,12 +11,7 @@ namespace OrderService.Infrastructure.EntityConfigurations
         {
             builder.ToTable("Orders", OrderDbContext.DEFAULT_SCHEMA);
 
-            var navigation = builder.Metadata.FindNavigation(nameof(Order.OrderItems));
-            navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
-
-            builder.HasOne(x => x.Buyer)
-                .WithMany()
-                .HasForeignKey(x => x.BuyerId);
+            builder.Property(x => x.Id).HasDefaultValueSql("NEWID()");
         }
     }
 }

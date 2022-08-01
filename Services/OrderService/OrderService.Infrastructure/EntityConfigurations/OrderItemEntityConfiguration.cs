@@ -13,6 +13,8 @@ namespace OrderService.Infrastructure.EntityConfigurations
             builder.ToTable("OrderItems", OrderDbContext.DEFAULT_SCHEMA);
 
             builder.Property<Guid>(nameof(OrderItem.OrderId)).IsRequired();
+
+            builder.Property(x => x.Id).HasDefaultValueSql("NEWID()");
         }
     }
 }

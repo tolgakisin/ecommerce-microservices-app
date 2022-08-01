@@ -5,7 +5,7 @@ using System;
 
 namespace PaymentService.API.IntegrationEvents.Events
 {
-    [Event(EventNames.Order.OrderStartedEvent)]
+    [Event(EventNames.Order.OrderCreatedEvent)]
     public class OrderCreatedEvent : BaseEvent
     {
         public OrderCreatedEvent(Guid userId, Guid orderId)

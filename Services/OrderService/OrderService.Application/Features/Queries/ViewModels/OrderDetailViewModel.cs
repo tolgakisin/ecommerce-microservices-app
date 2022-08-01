@@ -6,7 +6,7 @@ namespace OrderService.Application.Features.Queries.ViewModels
     public class OrderDetailViewModel
     {
         public Guid OrderId { get; set; }
-        public Guid BuyerId { get; set; }
+        public Guid UserId { get; set; }
         public DateTime OrderDate { get; set; }
         public string Description { get; set; }
         public string Status { get; set; }

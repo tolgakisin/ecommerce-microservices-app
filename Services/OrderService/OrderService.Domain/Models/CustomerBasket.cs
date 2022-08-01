@@ -5,7 +5,7 @@ namespace OrderService.Domain.Models
 {
     public class CustomerBasket
     {
-        public Guid BuyerId { get; set; }
+        public Guid UserId { get; set; }
         public List<BasketItem> BasketItems { get; set; }
     }
 }

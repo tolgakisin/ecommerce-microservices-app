@@ -45,7 +45,7 @@ namespace BasketService.Data.Repositories.Basket
                 item.Id = Guid.NewGuid();
             }
 
-            return await _redisDb.StringSetAsync(basket.BuyerId.ToString(), JsonConvert.SerializeObject(basket));
+            return await _redisDb.StringSetAsync(basket.UserId.ToString(), JsonConvert.SerializeObject(basket));
         }
     }
 }

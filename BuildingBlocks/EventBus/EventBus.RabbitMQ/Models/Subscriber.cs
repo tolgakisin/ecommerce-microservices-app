@@ -70,7 +70,7 @@ namespace EventBus.RabbitMQ.Models
                         message = messageDataBackup;
                         message.EventFinished = false;
                         message.EventFailed = true;
-                        message.EventErrorMessage = ex.InnerException.Message;
+                        message.EventErrorMessage = ex.Message ?? ex.InnerException?.Message;
                     }
                     finally
                     {

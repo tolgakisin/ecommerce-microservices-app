@@ -2,21 +2,21 @@
 
 namespace EventBus.Core
 {
-    public class EventNames
+    public sealed class EventNames
     {
-        public class Orchestrator
+        public sealed class Orchestrator
         {
             public const string OrchestratorGeneralEvent = "orchestrator-general-event";
         }
 
-        public class Order
+        public sealed class Order
         {
             public const string OrderCreatedEvent = "OrderCreatedEvent";
             public const string OrderStartedEvent = "OrderStartedEvent";
             public const string OrderSubmittedEvent = "OrderSubmittedEvent";
         }
 
-        public class Payment
+        public sealed class Payment
         {
             public const string PaymentSuccessEvent = "PaymentSuccessEvent";
             public const string PaymentFailedEvent = "PaymentFailedEvent";

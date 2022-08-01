@@ -32,7 +32,7 @@ namespace BasketService.Business.Services
 
         public async Task<CustomerBasket> UpdateBasketAsync(CustomerBasket customerBasket)
         {
-            if (customerBasket == null || customerBasket.BuyerId == Guid.Empty)
+            if (customerBasket == null || customerBasket.UserId == Guid.Empty)
                 ErrorManagement.ThrowError("Basket is not found.");
 
             bool isUpdated = await _basketRepository.UpdateBasketAsync(customerBasket);
@@ -40,7 +40,7 @@ namespace BasketService.Business.Services
             if (!isUpdated)
                 ErrorManagement.ThrowError("Basket couldn't be updated.");
 
-            return await GetBasketAsync(customerBasket.BuyerId.ToString());
+            return await GetBasketAsync(customerBasket.UserId.ToString());
         }
 
         public async Task<bool> ClearBasketAsync(string buyerId)

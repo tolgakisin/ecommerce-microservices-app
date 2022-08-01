@@ -19,32 +19,60 @@ namespace OrderService.Infrastructure.Repositories
             _orderDbContext = orderDbContext;
         }
 
-        public IEnumerable<T> GetAll()
+        public IQueryable<T> Query()
+        {
+            return _orderDbContext.Set<T>();
+        }
+
+        public virtual IEnumerable<T> GetAll()
         {
             return _orderDbContext.Set<T>().AsNoTracking();
         }
 
-        public async Task<T> GetByIdAsync(Guid id)
+        public async virtual Task<T> GetByIdAsync(Guid id)
         {
             return await _orderDbContext.Set<T>().FindAsync(id);
         }
 
-        public async Task<T> SaveAsync(T t)
+        public async virtual Task<T> SaveAsync(T entity)
         {
-            if (t == null) return null;
+            if (entity == null) return null;
 
             try
             {
-                _orderDbContext.Entry(t).State = t.Id == default ? EntityState.Added : EntityState.Modified;
+                _orderDbContext.AttachRange(entity);
+                _orderDbContext.Entry(entity).State = entity.Id == Guid.Empty ? EntityState.Added : EntityState.Modified;
 
                 if ((await _orderDbContext.SaveChangesAsync()) < 1) return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
 
-            return t;
+            return entity;
+        }
+
+        public async virtual Task<IEnumerable<T>> SaveAsync(List<T> entities)
+        {
+            if (entities == null || !entities.Any()) return null;
+
+            try
+            {
+                _orderDbContext.AttachRange(entities);
+                foreach (var entity in entities)
+                {
+                    _orderDbContext.Entry(entity).State = entity.Id == Guid.Empty ? EntityState.Added : EntityState.Modified;
+                }
+
+                if ((await _orderDbContext.SaveChangesAsync()) < 1) return null;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            return entities;
         }
     }
 }

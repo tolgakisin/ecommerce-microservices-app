@@ -1,5 +1,4 @@
-﻿using OrderService.Domain.AggregateModels.BuyerAggregate;
-using OrderService.Domain.Common;
+﻿using OrderService.Domain.Common;
 using System;
 using System.Collections.Generic;
 
@@ -9,40 +8,43 @@ namespace OrderService.Domain.AggregateModels.OrderAggregate
     {
         public DateTime OrderDate { get; private set; }
         public string Description { get; private set; }
-        public Guid BuyerId { get; private set; }
-        public Buyer Buyer { get; set; }
-        public Address Address { get; private set; }
+        public Guid UserId { get; private set; }
+        public Guid AddressId { get; private set; }
+        public virtual Address Address { get; private set; }
         public int OrderStatus { get; private set; }
-        private readonly List<OrderItem> _orderItems;
-        public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
+        public ICollection<OrderItem> OrderItems { get; private set; }
         public Guid PaymentId { get; private set; }
-        public Payment Payment { get; private set; }
+        public virtual Payment Payment { get; private set; }
 
         protected Order()
         {
             Id = Guid.NewGuid();
             OrderDate = DateTime.Now;
-            _orderItems = new List<OrderItem>();
         }
 
-        public Order(Guid buyerId, Address address, Payment payment)
+        public Order(Guid userId, Address address, Payment payment)
         {
-            BuyerId = buyerId;
+            OrderItems = new List<OrderItem>();
             OrderDate = DateTime.Now;
+
+            OrderStatus = OrderAggregate.OrderStatus.Pending.Id;
+            UserId = userId;
             Address = address;
+            AddressId = address.Id;
             Payment = payment;
+            PaymentId = payment.Id;
         }
 
         public void AddOrderItem(Guid productId, string productName, decimal unitPrice, int quantity)
         {
             // OrderItem Validations
 
-            _orderItems.Add(new OrderItem(productId, productName, unitPrice, quantity, Id));
+            OrderItems.Add(new OrderItem(productId, productName, unitPrice, quantity, Id));
         }
 
-        public void SetBuyerId(Guid buyerId)
+        public void SetBuyerId(Guid userId)
         {
-            BuyerId = buyerId;
+            UserId = userId;
         }
 
         public void SetPaymentId(Guid paymentId)

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OrderService.Domain.AggregateModels.BuyerAggregate;
+using OrderService.Domain.AggregateModels.OrderAggregate;
 using OrderService.Infrastructure.Context;
 
 namespace OrderService.Infrastructure.EntityConfigurations
@@ -11,9 +11,9 @@ namespace OrderService.Infrastructure.EntityConfigurations
         {
             builder.ToTable("Payments", OrderDbContext.DEFAULT_SCHEMA);
 
-            builder.Ignore(nameof(Payment.CardType));
+            builder.Ignore(x => x.CardType);
 
-            builder.Property(nameof(Payment.BuyerId)).IsRequired();
+            builder.Property(x => x.Id).HasDefaultValueSql("NEWID()");
         }
     }
 }

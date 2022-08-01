@@ -6,7 +6,7 @@ namespace BasketService.Data.Contracts.Entities.Basket
 {
     public class CustomerBasket : BaseEntity
     {
-        public Guid BuyerId { get; set; }
+        public Guid UserId { get; set; }
         public List<BasketItem> BasketItems { get; set; }
     }
 }

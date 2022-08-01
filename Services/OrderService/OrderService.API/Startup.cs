@@ -1,7 +1,9 @@
 using EventBus.RabbitMQ.Models;
 using EventBus.RabbitMQ.RabbitMQ;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,6 +11,10 @@ using Microsoft.OpenApi.Models;
 using OrderService.API.Extensions;
 using OrderService.Application.IntegrationEvents.EventHandlers;
 using OrderService.Application.IntegrationEvents.Events;
+using OrderService.Application.Interfaces.Repositories;
+using OrderService.Infrastructure.Context;
+using OrderService.Infrastructure.Repositories;
+using System.Reflection;
 
 namespace OrderService.API
 {
@@ -30,6 +36,11 @@ namespace OrderService.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "OrderService.API", Version = "v1" });
             });
 
+            services.AddDbContext<OrderDbContext>((options) =>
+            {
+                options.UseSqlServer(Configuration.GetSection("ConnectionString:OrderServiceDb").Value);
+            });
+
             ConfigureExtensions(services);
         }
 
@@ -48,6 +59,7 @@ namespace OrderService.API
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
@@ -70,7 +82,20 @@ namespace OrderService.API
             services.AddSingleton<IEventManager, EventManager>();
 
             services.AddScoped<IEventHandler<OrderStartedEvent>, OrderStartedEventHandler>();
+            services.AddScoped<IEventHandler<OrderSubmittedEvent>, OrderSubmittedEventHandler>();
             services.AddScoped<IEventHandler<PaymentSuccessEvent>, PaymentSuccessEventHandler>();
+            services.AddScoped<IEventHandler<PaymentFailedEvent>, PaymentFailedEventHandler>();
+
+            //Repository
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped(typeof(IOrderRepository), typeof(OrderRepository));
+            services.AddScoped(typeof(IOrderItemRepository), typeof(OrderItemRepository));
+
+            // MediatR
+            services.AddMediatR(typeof(IGenericRepository<>).GetTypeInfo().Assembly);
+
+            // Mapper
+            services.AddAutoMapper(typeof(Startup).Assembly);
         }
     }
 }

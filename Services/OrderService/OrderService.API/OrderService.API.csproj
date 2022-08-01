@@ -22,6 +22,7 @@
     <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.Core\EventBus.Core.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.RabbitMQ\EventBus.RabbitMQ.csproj" />
     <ProjectReference Include="..\OrderService.Application\OrderService.Application.csproj" />
+    <ProjectReference Include="..\OrderService.Infrastructure\OrderService.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

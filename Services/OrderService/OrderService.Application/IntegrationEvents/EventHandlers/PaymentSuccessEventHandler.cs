@@ -10,13 +10,13 @@ namespace OrderService.Application.IntegrationEvents.EventHandlers
 {
     public class PaymentSuccessEventHandler : IEventHandler<PaymentSuccessEvent>
     {
-        private readonly IMediator _mediator;
         private readonly IEventManager _eventManager;
+        private readonly IMediator _mediator;
 
-        public PaymentSuccessEventHandler(IMediator mediator, IEventManager eventManager)
+        public PaymentSuccessEventHandler(IEventManager eventManager, IMediator mediator)
         {
-            _mediator = mediator;
             _eventManager = eventManager;
+            _mediator = mediator;
         }
 
         public async Task Handle(PaymentSuccessEvent @event)
@@ -24,7 +24,7 @@ namespace OrderService.Application.IntegrationEvents.EventHandlers
             var order = await _mediator.Send(new ChangeOrderStatusCommand(@event.OrderId, OrderStatus.Paid));
 
             if (order != null)
-                _eventManager.Publish(new OrderSubmittedEvent(order.BuyerId, order.Id));
+                _eventManager.Publish(new OrderSubmittedEvent(order.UserId, order.Id));
         }
 
         public Task HandleReverse(PaymentSuccessEvent @event)

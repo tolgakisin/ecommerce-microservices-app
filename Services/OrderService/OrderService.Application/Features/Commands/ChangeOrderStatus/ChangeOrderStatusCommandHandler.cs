@@ -1,5 +1,4 @@
-﻿using EventBus.RabbitMQ.Models;
-using MediatR;
+﻿using MediatR;
 using OrderService.Application.Interfaces.Repositories;
 using OrderService.Domain.AggregateModels.OrderAggregate;
 using System.Threading;

@@ -9,8 +9,10 @@ namespace OrderService.Application.Interfaces.Repositories
 {
     public interface IGenericRepository<T> : IRepository<T> where T : BaseEntity
     {
+        IQueryable<T> Query();
         IEnumerable<T> GetAll();
         Task<T> GetByIdAsync(Guid id);
-        Task<T> SaveAsync(T t);
+        Task<T> SaveAsync(T entity);
+        Task<IEnumerable<T>> SaveAsync(List<T> entities);
     }
 }

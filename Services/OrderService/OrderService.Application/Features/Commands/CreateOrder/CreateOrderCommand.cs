@@ -9,15 +9,15 @@ namespace OrderService.Application.Features.Commands.CreateOrder
 {
     public class CreateOrderCommand : IRequest<bool>
     {
-        public Guid BuyerId { get; set; }
+        public Guid UserId { get; set; }
         public IEnumerable<OrderItemDto> OrderItems { get; set; }
         public OrderAddressDto OrderAddress { get; set; }
         public OrderPaymentDto OrderPayment { get; set; }
 
 
-        public CreateOrderCommand(Guid buyerId, CustomerBasket customerBasket, CustomerAddress customerAddress, CustomerPayment customerPayment)
+        public CreateOrderCommand(Guid userId, CustomerBasket customerBasket, CustomerAddress customerAddress, CustomerPayment customerPayment)
         {
-            BuyerId = buyerId;
+            UserId = userId;
 
             OrderItems = customerBasket.BasketItems.Select(x => new OrderItemDto
             {

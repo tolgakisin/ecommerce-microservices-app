@@ -10,6 +10,8 @@ namespace OrderService.Infrastructure.EntityConfigurations
         public void Configure(EntityTypeBuilder<Address> builder)
         {
             builder.ToTable("Addresses", OrderDbContext.DEFAULT_SCHEMA);
+
+            builder.Property(x => x.Id).HasDefaultValueSql("NEWID()");
         }
     }
 }
