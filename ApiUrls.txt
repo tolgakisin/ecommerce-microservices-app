@@ -5,4 +5,12 @@ OrderService.API -> https://localhost:44305
 PaymentService.API -> https://localhost:44306
 
 
-OcelotApiGateway -> https://localhost:44310
+OcelotApiGateway -> http://localhost:5000
+
+IdentityService.API -> http://localhost:5001
+ProductService.API -> http://localhost:5002
+BasketService.API -> http://localhost:5003
+OrderService.API -> http://localhost:5004
+PaymentService.API -> http://localhost:5005
+
+NotificationService.ConsoleApp -> Console Application
