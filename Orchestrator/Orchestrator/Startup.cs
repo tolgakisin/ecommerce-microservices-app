@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Orchestrator.Data.Common;
+using Orchestrator.Extensions;
 using Orchestrator.RabbitMQ;
 using Orchestrator.RabbitMQ.Extensions;
 
@@ -23,6 +24,7 @@ namespace Orchestrator
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.ConfigureConsul(Configuration);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -40,7 +42,7 @@ namespace Orchestrator
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IRabbitMQBase rabbitMQBase)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IRabbitMQBase rabbitMQBase, IHostApplicationLifetime lifetime)
         {
             if (env.IsDevelopment())
             {
@@ -61,6 +63,8 @@ namespace Orchestrator
             });
 
             app.UseOrchestrationSubscription(rabbitMQBase);
+
+            app.RegisterWithConsul(lifetime);
         }
     }
 }

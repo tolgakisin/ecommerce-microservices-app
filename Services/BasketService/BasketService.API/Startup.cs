@@ -37,7 +37,7 @@ namespace BasketService.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IEventManager eventManager)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IEventManager eventManager, IHostApplicationLifetime lifetime)
         {
             if (env.IsDevelopment())
             {
@@ -58,6 +58,8 @@ namespace BasketService.API
                 endpoints.MapControllers();
             });
 
+            app.RegisterWithConsul(lifetime);
+
             // Subscribe all events.
             //app.UseEventSubscribing();
 
@@ -66,6 +68,8 @@ namespace BasketService.API
 
         private void ConfigureExtensions(IServiceCollection services)
         {
+            services.ConfigureConsul(Configuration);
+
             services.ConfigureAuth(Configuration);
 
             services.AddSingleton(x => x.ConfigureRedis(Configuration));

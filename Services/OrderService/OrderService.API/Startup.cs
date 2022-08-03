@@ -45,7 +45,7 @@ namespace OrderService.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IEventManager eventManager)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IEventManager eventManager, IHostApplicationLifetime lifetime)
         {
             if (env.IsDevelopment())
             {
@@ -66,6 +66,8 @@ namespace OrderService.API
                 endpoints.MapControllers();
             });
 
+            app.RegisterWithConsul(lifetime);
+
             eventManager.Subscribe<PaymentSuccessEvent, PaymentSuccessEventHandler>();
             eventManager.Subscribe<PaymentFailedEvent, PaymentFailedEventHandler>();
             eventManager.Subscribe<OrderStartedEvent, OrderStartedEventHandler>();
@@ -74,6 +76,9 @@ namespace OrderService.API
 
         private void ConfigureExtensions(IServiceCollection services)
         {
+            //Consul 
+            services.ConfigureConsul(Configuration);
+
             //Auth
             services.ConfigureAuth(Configuration);
 

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using ProductService.API.Extensions;
 using ProductService.Command.Data.Common;
 using ProductService.Query.Consumers;
 using ProductService.Query.Data.Common;
@@ -26,6 +27,8 @@ namespace ProductService.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.ConfigureConsul(Configuration);
+
             services.AddMediatR(typeof(ProductDbContext).GetTypeInfo().Assembly);
             services.AddMediatR(typeof(ProductReadDbContext).GetTypeInfo().Assembly);
 
@@ -64,7 +67,7 @@ namespace ProductService.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
             if (env.IsDevelopment())
             {
@@ -83,6 +86,8 @@ namespace ProductService.API
             {
                 endpoints.MapControllers();
             });
+
+            app.RegisterWithConsul(lifetime);
         }
     }
 }

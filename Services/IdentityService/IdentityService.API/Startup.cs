@@ -1,6 +1,7 @@
 using IdentityService.API.Authentication;
 using IdentityService.API.Core.Authentication;
 using IdentityService.API.Data.Common;
+using IdentityService.API.Extensions;
 using IdentityService.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -39,10 +40,12 @@ namespace IdentityService.API
 
             services.AddSingleton<IAuthenticationHandler, AuthenticationHandler>();
             services.AddScoped<IIdentityService, Services.IdentityService>();
+
+            services.ConfigureConsul(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
             if (env.IsDevelopment())
             {
@@ -62,6 +65,8 @@ namespace IdentityService.API
             {
                 endpoints.MapControllers();
             });
+
+            app.RegisterWithConsul(lifetime);
         }
     }
 }

@@ -1,5 +1,7 @@
 OcelotApiGateway -> http://localhost:5000
 
+Orchestrator -> http://localhost:5099
+
 IdentityService.API -> http://localhost:5001
 ProductService.API -> http://localhost:5002
 BasketService.API -> http://localhost:5003

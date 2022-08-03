@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using PaymentService.API.Extensions;
 using PaymentService.API.IntegrationEvents.EventHandlers;
 using PaymentService.API.IntegrationEvents.Events;
 
@@ -23,6 +24,8 @@ namespace PaymentService.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.ConfigureConsul(Configuration);
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -36,7 +39,7 @@ namespace PaymentService.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IEventManager eventManager)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IEventManager eventManager, IHostApplicationLifetime lifetime)
         {
             if (env.IsDevelopment())
             {
@@ -55,6 +58,8 @@ namespace PaymentService.API
             {
                 endpoints.MapControllers();
             });
+
+            app.RegisterWithConsul(lifetime);
 
             eventManager.Subscribe<OrderCreatedEvent, OrderCreatedEventHandler>();
         }
