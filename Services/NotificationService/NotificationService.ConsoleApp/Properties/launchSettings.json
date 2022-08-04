@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "NotificationService.ConsoleApp": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

@@ -1,34 +1,85 @@
-version: "3.4"
+version: '3.4'
+
 services:
+  orchestrator:
+    container_name: c_orchestrator
+    image: ${DOCKER_REGISTRY-}orchestrator
+    build:
+      context: .
+      dockerfile: Orchestrator/Orchestrator/Dockerfile
+
+  ocelotapigateway:
+    container_name: c_ocelotapigateway
+    image: ${DOCKER_REGISTRY-}ocelotapigateway
+    build:
+      context: .
+      dockerfile: ApiGateways/OcelotApiGateway/Dockerfile
+
+
+  basketservice.api:
+    container_name: c_basketservice
+    image: ${DOCKER_REGISTRY-}basketserviceapi
+    build:
+      context: .
+      dockerfile: Services/BasketService/BasketService.API/Dockerfile
+
+
+  identityservice.api:
+    container_name: c_identityservice
+    image: ${DOCKER_REGISTRY-}identityserviceapi
+    build:
+      context: .
+      dockerfile: Services/IdentityService/IdentityService.API/Dockerfile
+
+
+  notificationservice.consoleapp:
+    container_name: c_notificationservice
+    image: ${DOCKER_REGISTRY-}notificationserviceconsoleapp
+    build:
+      context: .
+      dockerfile: Services/NotificationService/NotificationService.ConsoleApp/Dockerfile
+
+
+  orderservice.api:
+    container_name: c_orderservice
+    image: ${DOCKER_REGISTRY-}orderserviceapi
+    build:
+      context: .
+      dockerfile: Services/OrderService/OrderService.API/Dockerfile
+
+
+  paymentservice.api:
+    container_name: c_paymentservice
+    image: ${DOCKER_REGISTRY-}paymentserviceapi
+    build:
+      context: .
+      dockerfile: Services/PaymentService/PaymentService.API/Dockerfile
+
+
+  productservice.api:
+    container_name: c_productservice
+    image: ${DOCKER_REGISTRY-}productserviceapi
+    build:
+      context: .
+      dockerfile: Services/ProductService/ProductService.API/Dockerfile
+
+
+  s_sqlserver:
+    container_name: c_sqlserver
+    image: mcr.microsoft.com/mssql/server:2019-latest
+
   s_masstransit_rabbitmq: 
     container_name: "c_masstransit_rabbitmq"
     image: masstransit/rabbitmq
-    ports: 
-      - 5673:5673
-      - 15673:15673
-    volumes:
-      - ./conf/masstransit_rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
 
   s_rabbitmq: 
     container_name: "c_rabbitmq_management"
     image: rabbitmq:3-management
-    ports: 
-      - 5672:5672
-      - 15672:15672
 
   s_redis: 
     container_name: "c_redis"
     image: redis
-    ports: 
-      - 6379:6379
 
   s_consul:
     container_name: "c_consul"
     image: consul
-    ports: 
-        - 8500:8500
-        - 8600:8600/tcp
-        - 8600:8600/udp
-
-volumes:
-  rabbitmq:

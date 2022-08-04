@@ -1,0 +1,192 @@
+version: '3.4'
+
+services:
+  ocelotapigateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
+    ports:
+      - "5000:5000"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+        - net_apigateway
+        - net_backendservices
+
+  orchestrator:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5099
+      - ConsulConfig__Address=http://s_consul:8500
+      - ConsulConfig__ServiceAddress=http://c_orchestrator:5099
+      - ConsulConfig__ServiceName=Orchestrator
+      - ConsulConfig__ServiceId=Orchestrator
+    ports:
+      - "5099:5099"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+        - net_backendservices
+    depends_on:
+        - c_ocelotapigateway
+        - s_sqlserver
+        - s_consul
+        - s_rabbitmq
+
+  basketservice.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5003
+      - ConsulConfig__Address=http://s_consul:8500
+      - ConsulConfig__ServiceAddress=http://c_basketservice:5003
+      - ConsulConfig__ServiceName=BasketService
+      - ConsulConfig__ServiceId=Basket
+    ports:
+      - "5003:5003"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+        - net_backendservices
+    depends_on:
+        - c_ocelotapigateway
+        - s_sqlserver
+        - s_consul
+        - s_rabbitmq
+
+  identityservice.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5001
+      - ConsulConfig__Address=http://s_consul:8500
+      - ConsulConfig__ServiceAddress=http://c_identityserver:5001
+      - ConsulConfig__ServiceName=IdentityService
+      - ConsulConfig__ServiceId=Identity
+    ports:
+      - "5001:5001"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+        - net_backendservices
+    depends_on:
+        - c_ocelotapigateway
+        - s_sqlserver
+        - s_consul
+        - s_rabbitmq
+
+  orderservice.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5004
+      - ConsulConfig__Address=http://s_consul:8500
+      - ConsulConfig__ServiceAddress=http://c_orderservice:5004
+      - ConsulConfig__ServiceName=OrderService
+      - ConsulConfig__ServiceId=Order
+    ports:
+      - "5004:5004"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - net_backendservices
+    depends_on:
+      - c_ocelotapigateway
+      - s_sqlserver
+      - s_consul
+      - s_rabbitmq
+
+  paymentservice.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5005
+      - ConsulConfig__Address=http://s_consul:8500
+      - ConsulConfig__ServiceAddress=http://c_paymentservice:5005
+      - ConsulConfig__ServiceName=PaymentService
+      - ConsulConfig__ServiceId=Payment
+    ports:
+      - "5005:5005"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+        - net_backendservices
+    depends_on:
+        - c_ocelotapigateway
+        - s_sqlserver
+        - s_consul
+        - s_rabbitmq
+
+  productservice.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5002
+      - ConsulConfig__Address=http://s_consul:8500
+      - ConsulConfig__ServiceAddress=http://c_productservice:5002
+      - ConsulConfig__ServiceName=ProductService
+      - ConsulConfig__ServiceId=Product
+    ports:
+      - "5002:5002"
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+        - net_apigateway
+        - net_backendservices
+    depends_on:
+        - c_ocelotapigateway
+        - s_sqlserver
+        - s_consul
+        - s_rabbitmq
+        - s_masstransit_rabbitmq
+
+  s_consul:
+    ports: 
+        - 8500:8500
+        - 8600:8600/tcp
+        - 8600:8600/udp
+    networks:
+        - net_apigateway
+        - net_backendservices
+  
+  s_sqlserver:
+    user: root
+    ports:
+        - 1433:1433
+    environment:
+        - ACCEPT_EULA=Y
+        - MSSQL_SA_PASSWORD=12345
+    volumes:
+        - sqlserver_data:/var/opt/mssql/data
+        - sqlserver_log:/var/opt/mssql/log
+    networks:
+        - net_backendservices
+  
+  s_masstransit_rabbitmq:
+    ports: 
+      - 5673:5673
+      - 15673:15673
+    volumes:
+      - ./conf/masstransit_rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    networks:
+      - net_backendservices
+      - net_apigateway
+
+  s_rabbitmq:
+    ports: 
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+    networks:
+      - net_backendservices
+      - net_apigateway
+
+  s_redis:
+    ports:
+      - 6379:6379
+    volumes:
+      - /opt/app_data/redis/:/data
+    networks:
+      - net_backendservices
+
+networks:
+  net_apigateway:
+    driver: bridge
+  net_backendservices:
+    driver: bridge

@@ -76,11 +76,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.RabbitMQ", "Buildi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.Core", "BuildingBlocks\EventBus\EventBus.Core\EventBus.Core.csproj", "{FAD54985-BB09-4829-A0C5-92C690279C16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService.Domain", "Services\OrderService\OrderService.Domain\OrderService.Domain.csproj", "{F96E04FC-553B-494A-800E-143D2DD90DC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderService.Domain", "Services\OrderService\OrderService.Domain\OrderService.Domain.csproj", "{F96E04FC-553B-494A-800E-143D2DD90DC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService.Application", "Services\OrderService\OrderService.Application\OrderService.Application.csproj", "{B47BF738-9722-40D5-BB12-7FB818FEE554}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderService.Application", "Services\OrderService\OrderService.Application\OrderService.Application.csproj", "{B47BF738-9722-40D5-BB12-7FB818FEE554}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService.Infrastructure", "Services\OrderService\OrderService.Infrastructure\OrderService.Infrastructure.csproj", "{DF9CD033-3E7D-46DE-A374-FE621F8D1CA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderService.Infrastructure", "Services\OrderService\OrderService.Infrastructure\OrderService.Infrastructure.csproj", "{DF9CD033-3E7D-46DE-A374-FE621F8D1CA0}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{7660A7AB-1B33-4D20-BE6D-2E2086BF1961}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -180,6 +182,10 @@ Global
 		{DF9CD033-3E7D-46DE-A374-FE621F8D1CA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF9CD033-3E7D-46DE-A374-FE621F8D1CA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF9CD033-3E7D-46DE-A374-FE621F8D1CA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7660A7AB-1B33-4D20-BE6D-2E2086BF1961}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7660A7AB-1B33-4D20-BE6D-2E2086BF1961}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7660A7AB-1B33-4D20-BE6D-2E2086BF1961}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7660A7AB-1B33-4D20-BE6D-2E2086BF1961}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
