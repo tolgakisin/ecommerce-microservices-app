@@ -15,46 +15,12 @@ services:
       context: .
       dockerfile: ApiGateways/OcelotApiGateway/Dockerfile
 
-
-  basketservice.api:
-    container_name: c_basketservice
-    image: ${DOCKER_REGISTRY-}basketserviceapi
-    build:
-      context: .
-      dockerfile: Services/BasketService/BasketService.API/Dockerfile
-
-
   identityservice.api:
     container_name: c_identityservice
     image: ${DOCKER_REGISTRY-}identityserviceapi
     build:
       context: .
       dockerfile: Services/IdentityService/IdentityService.API/Dockerfile
-
-
-  notificationservice.consoleapp:
-    container_name: c_notificationservice
-    image: ${DOCKER_REGISTRY-}notificationserviceconsoleapp
-    build:
-      context: .
-      dockerfile: Services/NotificationService/NotificationService.ConsoleApp/Dockerfile
-
-
-  orderservice.api:
-    container_name: c_orderservice
-    image: ${DOCKER_REGISTRY-}orderserviceapi
-    build:
-      context: .
-      dockerfile: Services/OrderService/OrderService.API/Dockerfile
-
-
-  paymentservice.api:
-    container_name: c_paymentservice
-    image: ${DOCKER_REGISTRY-}paymentserviceapi
-    build:
-      context: .
-      dockerfile: Services/PaymentService/PaymentService.API/Dockerfile
-
 
   productservice.api:
     container_name: c_productservice
@@ -63,6 +29,33 @@ services:
       context: .
       dockerfile: Services/ProductService/ProductService.API/Dockerfile
 
+  basketservice.api:
+    container_name: c_basketservice
+    image: ${DOCKER_REGISTRY-}basketserviceapi
+    build:
+      context: .
+      dockerfile: Services/BasketService/BasketService.API/Dockerfile
+
+  orderservice.api:
+    container_name: c_orderservice
+    image: ${DOCKER_REGISTRY-}orderserviceapi
+    build:
+      context: .
+      dockerfile: Services/OrderService/OrderService.API/Dockerfile
+
+  paymentservice.api:
+    container_name: c_paymentservice
+    image: ${DOCKER_REGISTRY-}paymentserviceapi
+    build:
+      context: .
+      dockerfile: Services/PaymentService/PaymentService.API/Dockerfile
+
+  notificationservice.consoleapp:
+    container_name: c_notificationservice
+    image: ${DOCKER_REGISTRY-}notificationserviceconsoleapp
+    build:
+      context: .
+      dockerfile: Services/NotificationService/NotificationService.ConsoleApp/Dockerfile
 
   s_sqlserver:
     container_name: c_sqlserver

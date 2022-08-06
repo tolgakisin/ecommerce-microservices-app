@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ProductService.Command.Data.Common;
+using ProductService.Query.Data.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +17,17 @@ namespace ProductService.API
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            using (var scope = host.Services.CreateScope())
+            {
+                var dbWrite = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
+                var dbRead = scope.ServiceProvider.GetRequiredService<ProductReadDbContext>();
+                dbWrite.Database.Migrate();
+                dbRead.Database.Migrate();
+            }
+
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
