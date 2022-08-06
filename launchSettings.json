@@ -1,0 +1,26 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "composeLaunchServiceName": "ocelotapigateway",
+      "serviceActions": {
+        "basketservice.api": "StartDebugging",
+        "identityservice.api": "StartDebugging",
+        "notificationservice.consoleapp": "StartDebugging",
+        "ocelotapigateway": "StartDebugging",
+        "orchestrator": "StartDebugging",
+        "orderservice.api": "StartDebugging",
+        "paymentservice.api": "StartDebugging",
+        "productservice.api": "StartDebugging",
+        "s_consul": "StartWithoutDebugging",
+        "s_masstransit_rabbitmq": "StartWithoutDebugging",
+        "s_rabbitmq": "StartWithoutDebugging",
+        "s_redis": "StartWithoutDebugging",
+        "s_sqlserver": "StartWithoutDebugging"
+      },
+      "composeLaunchAction": "LaunchBrowser",
+      "commandVersion": "1.0",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger"
+    }
+  }
+}

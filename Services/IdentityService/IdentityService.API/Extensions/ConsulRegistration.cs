@@ -26,7 +26,7 @@ namespace IdentityService.API.Extensions
             return services;
         }
 
-        public static IApplicationBuilder RegisterWithConsul(this IApplicationBuilder app, IHostApplicationLifetime lifetime)
+        public static IApplicationBuilder RegisterWithConsul(this IApplicationBuilder app, IHostApplicationLifetime lifetime, IConfiguration configuration)
         {
             var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
 
@@ -34,20 +34,18 @@ namespace IdentityService.API.Extensions
 
             var logger = loggingFactory.CreateLogger<IApplicationBuilder>();
 
-            // Get server IP ADDRESS
-            var features = app.Properties["server.Features"] as FeatureCollection;
-            var addresses = features.Get<IServerAddressesFeature>();
-            var address = addresses.Addresses.First();
+            var uri = configuration.GetValue<Uri>("ConsulConfig:Address");
+            var serviceName = configuration.GetValue<string>("ConsulConfig:ServiceName");
+            var serviceId = configuration.GetValue<string>("ConsulConfig:ServiceId");
 
             // Register service with consul
-            var uri = new Uri(address);
             var registration = new AgentServiceRegistration()
             {
-                ID = "IdentityService",
-                Name = "IdentityService",
+                ID = serviceId ?? "IdentityService",
+                Name = serviceName ?? "IdentityService",
                 Address = $"{uri.Host}",
                 Port = uri.Port,
-                Tags = new[] { "Identity Service", "Identity" }
+                Tags = new[] { serviceId, serviceName }
             };
 
             logger.LogInformation("Registering with Consul");

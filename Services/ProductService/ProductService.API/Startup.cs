@@ -39,7 +39,7 @@ namespace ProductService.API
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host("localhost", 5673, "/", c =>
+                    cfg.Host("c_masstransit_rabbitmq", 5673, "/", c =>
                     {
                         c.Username("test");
                         c.Password("test");
@@ -76,7 +76,7 @@ namespace ProductService.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProductService.API v1"));
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -87,7 +87,7 @@ namespace ProductService.API
                 endpoints.MapControllers();
             });
 
-            app.RegisterWithConsul(lifetime);
+            app.RegisterWithConsul(lifetime, Configuration);
         }
     }
 }

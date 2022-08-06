@@ -9,6 +9,8 @@ using Orchestrator.Data.Common;
 using Orchestrator.Extensions;
 using Orchestrator.RabbitMQ;
 using Orchestrator.RabbitMQ.Extensions;
+using Polly;
+using System;
 
 namespace Orchestrator
 {
@@ -32,7 +34,7 @@ namespace Orchestrator
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Orchestrator", Version = "v1" });
             });
 
-            services.AddDbContext<Context>(options =>
+            services.AddDbContext<Data.Common.Context>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("Orchestrator.ConnectionString"));
             });
@@ -51,7 +53,7 @@ namespace Orchestrator
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Orchestrator v1"));
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -62,9 +64,12 @@ namespace Orchestrator
                 endpoints.MapControllers();
             });
 
-            app.UseOrchestrationSubscription(rabbitMQBase);
+            Policy.Handle<Exception>().WaitAndRetryForever(_ => TimeSpan.FromSeconds(5)).Execute(() =>
+            {
+                app.UseOrchestrationSubscription(rabbitMQBase);
+            });
 
-            app.RegisterWithConsul(lifetime);
+            app.RegisterWithConsul(lifetime, Configuration);
         }
     }
 }

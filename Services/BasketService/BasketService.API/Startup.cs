@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Polly;
+using System;
 
 namespace BasketService.API
 {
@@ -46,7 +48,7 @@ namespace BasketService.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BasketService.API v1"));
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -58,12 +60,14 @@ namespace BasketService.API
                 endpoints.MapControllers();
             });
 
-            app.RegisterWithConsul(lifetime);
+            app.RegisterWithConsul(lifetime, Configuration);
 
             // Subscribe all events.
             //app.UseEventSubscribing();
-
-            eventManager.Subscribe<OrderCreatedEvent, OrderCreatedEventHandler>();
+            Policy.Handle<Exception>().WaitAndRetryForever(_ => TimeSpan.FromSeconds(5)).Execute(() =>
+            {
+                eventManager.Subscribe<OrderCreatedEvent, OrderCreatedEventHandler>();
+            });
         }
 
         private void ConfigureExtensions(IServiceCollection services)

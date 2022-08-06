@@ -14,6 +14,8 @@ using OrderService.Application.IntegrationEvents.Events;
 using OrderService.Application.Interfaces.Repositories;
 using OrderService.Infrastructure.Context;
 using OrderService.Infrastructure.Repositories;
+using Polly;
+using System;
 using System.Reflection;
 
 namespace OrderService.API
@@ -54,7 +56,7 @@ namespace OrderService.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OrderService.API v1"));
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -66,12 +68,15 @@ namespace OrderService.API
                 endpoints.MapControllers();
             });
 
-            app.RegisterWithConsul(lifetime);
+            app.RegisterWithConsul(lifetime, Configuration);
 
-            eventManager.Subscribe<PaymentSuccessEvent, PaymentSuccessEventHandler>();
-            eventManager.Subscribe<PaymentFailedEvent, PaymentFailedEventHandler>();
-            eventManager.Subscribe<OrderStartedEvent, OrderStartedEventHandler>();
-            eventManager.Subscribe<OrderSubmittedEvent, OrderSubmittedEventHandler>();
+            Policy.Handle<Exception>().WaitAndRetryForever(_ => TimeSpan.FromSeconds(5)).Execute(() =>
+            {
+                eventManager.Subscribe<PaymentSuccessEvent, PaymentSuccessEventHandler>();
+                eventManager.Subscribe<PaymentFailedEvent, PaymentFailedEventHandler>();
+                eventManager.Subscribe<OrderStartedEvent, OrderStartedEventHandler>();
+                eventManager.Subscribe<OrderSubmittedEvent, OrderSubmittedEventHandler>();
+            });
         }
 
         private void ConfigureExtensions(IServiceCollection services)

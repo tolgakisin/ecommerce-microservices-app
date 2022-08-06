@@ -9,6 +9,8 @@ using Microsoft.OpenApi.Models;
 using PaymentService.API.Extensions;
 using PaymentService.API.IntegrationEvents.EventHandlers;
 using PaymentService.API.IntegrationEvents.Events;
+using Polly;
+using System;
 
 namespace PaymentService.API
 {
@@ -48,7 +50,7 @@ namespace PaymentService.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PaymentService.API v1"));
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -59,9 +61,12 @@ namespace PaymentService.API
                 endpoints.MapControllers();
             });
 
-            app.RegisterWithConsul(lifetime);
+            app.RegisterWithConsul(lifetime, Configuration);
 
-            eventManager.Subscribe<OrderCreatedEvent, OrderCreatedEventHandler>();
+            Policy.Handle<Exception>().WaitAndRetryForever(_ => TimeSpan.FromSeconds(5)).Execute(() =>
+            {
+                eventManager.Subscribe<OrderCreatedEvent, OrderCreatedEventHandler>();
+            });
         }
     }
 }

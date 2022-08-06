@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NotificationService.ConsoleApp.IntegrationEvents.EventHandlers;
 using NotificationService.ConsoleApp.IntegrationEvents.Events;
+using Polly;
 using System;
 using System.IO;
 
@@ -21,12 +22,18 @@ namespace NotificationService.ConsoleApp
                                                 .AddSingleton<IRabbitMQBase, RabbitMQBase>()
                                                 .AddScoped<IEventHandler<PaymentFailedEvent>, PaymentFailedEventHandler>()
                                                 .BuildServiceProvider();
-            var _eventManager = serviceProvider.GetService<IEventManager>();
 
-            _eventManager.Subscribe<PaymentFailedEvent, PaymentFailedEventHandler>();
-            _eventManager.Subscribe<PaymentSuccessEvent, PaymentSuccessEventHandler>();
+            Policy.Handle<Exception>().WaitAndRetryForever(_ => TimeSpan.FromSeconds(5)).Execute(() =>
+            {
+                var _eventManager = serviceProvider.GetService<IEventManager>();
 
+                _eventManager.Subscribe<PaymentFailedEvent, PaymentFailedEventHandler>();
+                _eventManager.Subscribe<PaymentSuccessEvent, PaymentSuccessEventHandler>();
+            });
+            
             Console.WriteLine("Hello World!");
+
+            Console.ReadKey();
         }
     }
 }

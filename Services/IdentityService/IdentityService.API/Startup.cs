@@ -54,7 +54,7 @@ namespace IdentityService.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "IdentityService.API v1"));
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -66,7 +66,7 @@ namespace IdentityService.API
                 endpoints.MapControllers();
             });
 
-            app.RegisterWithConsul(lifetime);
+            app.RegisterWithConsul(lifetime, Configuration);
         }
     }
 }
