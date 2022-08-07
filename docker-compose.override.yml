@@ -29,6 +29,7 @@ services:
       - s_consul
       - s_rabbitmq
     external_links:
+      - ocelotapigateway
       - s_consul
       - s_rabbitmq
       - s_sqlserver
@@ -38,7 +39,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5001
       - ConsulConfig__Address=http://s_consul:8500
-      - ConsulConfig__ServiceAddress=http://c_identityserver:5001
+      - ConsulConfig__ServiceAddress=http://c_identityservice:5001
       - ConsulConfig__ServiceName=IdentityService
       - ConsulConfig__ServiceId=Identity
     ports:

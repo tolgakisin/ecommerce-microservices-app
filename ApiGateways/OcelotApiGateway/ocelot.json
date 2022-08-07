@@ -65,7 +65,7 @@
   "GlobalConfiguration": {
     "BaseUrl": "http://ocelotapigateway:5000",
     "ServiceDiscoveryProvider": {
-      "Host": "c_consul",
+      "Host": "s_consul",
       "Port": 8500,
       "Type": "Consul"
     }

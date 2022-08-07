@@ -59,7 +59,7 @@ namespace OcelotApiGateway
                 endpoints.MapControllers();
             });
 
-            app.UseOcelot().GetAwaiter().GetResult();
+            await app.UseOcelot();
         }
     }
 }

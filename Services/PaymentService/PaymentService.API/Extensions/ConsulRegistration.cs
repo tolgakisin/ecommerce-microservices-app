@@ -34,7 +34,7 @@ namespace PaymentService.API.Extensions
 
             var logger = loggingFactory.CreateLogger<IApplicationBuilder>();
 
-            var uri = configuration.GetValue<Uri>("ConsulConfig:Address");
+            var uri = configuration.GetValue<Uri>("ConsulConfig:ServiceAddress");
             var serviceName = configuration.GetValue<string>("ConsulConfig:ServiceName");
             var serviceId = configuration.GetValue<string>("ConsulConfig:ServiceId");
 
