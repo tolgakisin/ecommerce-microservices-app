@@ -364,3 +364,4 @@ FodyWeavers.xsd
 
 .sqlserver_data/
 .sqlserver_log/
+.rabbitmq/
